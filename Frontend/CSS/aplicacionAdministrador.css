@@ -1,0 +1,429 @@
+*,::after,::before{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body,html{
+    height: 100vh;
+    width: 100%;
+}
+
+h2{
+    text-decoration: underline;
+}
+
+h5{
+    color: rgb(245, 141, 6);
+    margin: 1vh;
+    font-size: 1.4rem;
+}
+
+hr{
+    color: rgb(209, 208, 207);
+    margin-right: 2vh;
+    margin-left: 2vh;
+}
+
+.titulo{
+    font-size: 2.5rem;
+    padding: 1vh;
+    text-decoration: underline;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+}
+
+.contenido {
+    width: 100%; 
+    min-height: 100vh;
+    min-width: 100%;
+    color: antiquewhite;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: #06052c;
+}
+
+.modal1{
+    background-color: #06052c;
+    color: antiquewhite;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 1.1rem;
+    border: 2px solid rgb(165, 165, 165);
+}
+
+.modal2{
+    background-color: #141313;
+    color: antiquewhite;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.contenedorBotones{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.contenedorPrincipal{
+    width: auto;
+    min-width: auto;
+    min-height: auto;
+}
+
+.map-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 8vh;
+    padding: 3vh; 
+}
+
+.map-container iframe {
+    width: 100%;
+    max-width: 800px;
+    height: 550px;
+    border: 0;
+}
+
+.tabla{
+    margin: auto;
+    margin-top: 4vh;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.table-responsive-vertical {
+    max-height: 300px; 
+    overflow-y: auto;
+}
+
+.menu{
+    background: rgb(194,92,29);
+    background: linear-gradient(70deg, rgba(194,92,29,1) 0%, rgba(6,12,64,1) 65%, rgba(6,5,44,1) 100%);
+}
+
+.col-6 {
+    margin-right: 20px;
+}
+
+.agregarCliente {
+    color: rgb(255, 255, 255);
+}
+
+.contenedor-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: space-between;
+}
+
+.primeraCaja, .segundaCaja{
+    margin-top: 15vh;
+    background-color: #07053552;
+    flex: 1; 
+    min-width: 300px; 
+}
+
+.contenedorVenta{
+    position: relative;
+    top: 22vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 5vh;
+    height: 15vh;
+}
+
+.contenedorTitulo{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: auto;
+    background: rgb(194,92,29);
+    background: linear-gradient(70deg, rgba(194,92,29,1) 0%, rgba(6,12,64,1) 65%, rgba(6,5,44,1) 100%);
+    position: relative;
+    top: 8vh;
+}
+
+.offcanvas-body{
+    margin: 1vh;
+    font-size: 1rem;
+}
+
+.btn-close{
+    background-color: #ffffff;
+    margin: 1vh;
+    border: none;
+}
+
+.icono{
+    margin: 2vh;
+    font-size: 34rem;
+}
+
+.iconoPrincipal{
+    margin: 1.5vh;
+    background-color: #141313;
+    color: antiquewhite;
+}
+
+.iconoPrincipal:hover{
+    background-color:#ffffff;
+    color: #06052c;
+}
+
+.iconoDeMenu{
+    font-size: 1.3rem;
+}
+
+.simbolo{
+    font-size: 2.5vh;
+}
+
+.botones{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: antiquewhite;
+    background-color:#06052c;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 1.1rem;
+    margin-bottom: 2vh;
+}
+
+.btn:hover{
+    background-color:#ffffff;
+    color: #06052c;
+}
+
+.botonCierreSesion{
+    color: #06052c;
+    background-color: #ffffff;
+}
+
+.botonCierreSesion:hover{
+    color: #06052c;
+    background-color:#d1d0d0;
+}
+
+.botonNav{
+    margin: 2vh;
+    background-color: #141313;
+}
+
+.cancelar{
+    margin: 0;
+}
+
+.divLogo {
+    width: 100%;
+    background: rgb(194,92,29);
+    background: linear-gradient(90deg, rgba(194,92,29,1) 0%, rgba(6,12,64,1) 65%, rgba(6,5,44,1) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.logoSoftware{
+    width: 55vh;
+    height: 50vh;
+}
+
+p{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: justify;
+    color: antiquewhite;
+    font-size: 1.7rem;
+    margin: 1vh;
+}
+
+i{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.custom-input-width {
+    width: 25vh;
+}
+
+.contenedorCard{
+    position: relative;
+    top: 13vh;
+    min-height: auto;
+}
+
+.card{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: #06052c;
+    color: antiquewhite;
+    width: auto;
+    text-align: center;
+    margin: auto;
+    font-size: 1.1rem;
+}
+
+.row{
+    border: 2px solid red;
+}
+
+@media (max-width: 1766px){
+    .titulo{
+        font-size: 3.5rem;
+        padding: 2vh 0 0 0;
+    }
+    h2{
+        margin: auto;
+        font-size: 1.5rem;
+    }
+    .h2Derecha{
+        position: relative;
+        top: -1vh;
+    }
+    .contenedorAgregarUsuario{
+        position: relative;
+        top: 15vh;
+    }
+    .bajaUsuarios{
+        margin-bottom: 2vh;
+    }
+    .ultimaTablaClientes{
+        padding-bottom: 5vh;
+    }
+    .tablaUsuariosDeBaja{
+        position: relative;
+        top: 8vh;
+    }
+    .primeraCaja{
+        padding: 4vh;
+        margin-top: 10vh;
+    }
+    .segundaCaja{
+        padding-top: 4vh;
+        margin-top: 10vh;
+    }
+}
+
+@media (max-width: 1500px){
+    .titulo{
+        font-size: 2.5rem;
+        padding: 2vh 0 0 0;
+    }
+    h2{
+        margin: auto;
+        font-size: 1.5rem;
+    }
+    .h2Derecha{
+        position: relative;
+        top: -1vh;
+    }
+    .tablaUsuariosDeBaja{
+        position: relative;
+        top: 8vh;
+    }
+    .primeraCaja{
+        padding: 4vh;
+        margin-top: 10vh;
+    }
+    .segundaCaja{
+        padding-top: 4vh;
+        margin-top: 10vh;
+    }
+}
+
+@media (max-width: 1366px){
+    .titulo{
+        font-size: 2.5rem;
+        padding: 2vh 0 0 0;
+    }
+    h2{
+        margin: auto;
+        font-size: 1.5rem;
+    }
+    .h2Derecha{
+        position: relative;
+        top: -1vh;
+    }
+    .primeraCaja{
+        margin-top: 10vh;
+    }
+    .segundaCaja{
+        margin-top: 1vh;
+        margin-bottom: 5vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .container-md {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    h2{
+        margin: auto;
+        font-size: 1.5rem;
+    }
+    .h2Derecha{
+        margin-bottom: 1vh;
+        margin-top: 1vh;
+    }
+    .card {
+        max-width: 100%; 
+    }
+    .contenedor-flex {
+        flex-direction: column;
+    }
+    .botonReloj{
+        margin: auto;
+        font-size: 3vh;
+        margin-bottom: 2vh;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-control {
+        width: 125px;
+    }
+    p{
+        font-size: 1.2rem;
+    }
+    h2{
+        margin: auto;
+        font-size: 1.5rem;
+    }
+    .h2Derecha{
+        position: relative;
+        top: -1vh;
+    }
+    .titulo{
+        font-size: 2rem;
+        padding: 1vh 0 0 0;
+    }
+    .contenedorVenta{
+        position: relative;
+        top: 12vh;
+    }
+    .contenedorAgregarCosas{
+        display: flex;
+        gap: 1vh;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+    .segundaTabla{
+        padding: 2vh;
+        margin-top: 3vh;
+    }
+    .cajaTabla{
+        position: relative;
+        top: 1vh;
+    }
+    .input {
+        width: 100%;
+    }
+    .map-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 3vh;
+        padding: 3vh; 
+    }
+}
+
+
