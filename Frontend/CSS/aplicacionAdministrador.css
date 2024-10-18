@@ -293,13 +293,15 @@ i{
         position: relative;
         top: 8vh;
     }
-    .primeraCaja{
-        padding: 4vh;
-        margin-top: 10vh;
+    .modal-dialog {
+        max-height: 10vh; 
+        display: flex;
+        flex-direction: column;
     }
-    .segundaCaja{
-        padding-top: 4vh;
-        margin-top: 10vh;
+    
+    .modal-content {
+        flex-grow: 1;
+        overflow: auto;
     }
 }
 
@@ -328,6 +330,17 @@ i{
         padding-top: 4vh;
         margin-top: 10vh;
     }
+    .primeraCaja, .segundaCaja{
+        margin-top: 15vh;
+        background-color: #07053552;
+        flex: 1; 
+        min-width: 300px; 
+    }
+    .modal-dialog {
+        max-height: 10vh; 
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 1366px){
@@ -343,14 +356,25 @@ i{
         position: relative;
         top: -1vh;
     }
-    .primeraCaja{
-        margin-top: 10vh;
+    .contenedorAgregarCosas{
+        display: flex;
+        gap: 1vh;
+        flex-direction: row;
+        justify-content: space-around;
+        margin-top: 2vh;
     }
-    .segundaCaja{
-        margin-top: 1vh;
-        margin-bottom: 5vh;
+    .botones1{
+        display: flex; /* Asegura que los botones estén en una fila */
+        flex-direction: row; /* Asegura que la dirección sea en fila */
+        gap: 5px; /* Espacio entre los botones */
+        justify-content: flex-start; /* Alinea los botones al inicio */
+    }
+    .botonActualizar{
+        font-weight: 2vh;
+        height: 8vh;
     }
 }
+
 
 @media (max-width: 768px) {
     .container-md {
@@ -375,6 +399,13 @@ i{
         margin: auto;
         font-size: 3vh;
         margin-bottom: 2vh;
+    }
+    .contenedorAgregarCosas{
+        display: flex;
+        gap: 1vh;
+        flex-direction: row;
+        justify-content: space-around;
+        margin: auto;
     }
 }
 

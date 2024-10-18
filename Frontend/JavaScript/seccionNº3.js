@@ -1,4 +1,4 @@
-import { borrarContenidoInputs, tablas } from "./funciones.js";
+import { borrarContenidoInputs } from "./funciones.js";
 import { getProveedor } from "./Services/proveedoresServices.js";
 
 const columnas = ['ID', 'Nombre', 'Teléfono', 'Cantidad Solicitada'];
@@ -28,7 +28,7 @@ document.getElementById('proveedores').addEventListener("click", async () => {
             </div>
         </div>
         <div class="modal" data-bs-theme="dark" id="agregarProveedor" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content modal2">
                     <div class="modal-header">
                         <h5 class="modal-title">Agregar nuevo proveedor</h5>

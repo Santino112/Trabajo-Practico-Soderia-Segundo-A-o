@@ -1,4 +1,4 @@
-import { borrarContenidoInputs, tablas } from "./funciones.js";
+import { borrarContenidoInputs} from "./funciones.js";
 import { getRutaEntrega } from "./Services/rutasDeEntregaServices.js";
 
 const columnas = ['ID', 'Estado', 'Pedido'];
@@ -28,7 +28,7 @@ document.getElementById('rutasEntrega').addEventListener("click", async () => {
             </div>
         </div>
         <div class="modal" data-bs-theme="dark" id="agregarRutaEntrega" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content modal2">
                     <div class="modal-header">
                         <h5 class="modal-title">Agregar nueva ruta de entrega</h5>

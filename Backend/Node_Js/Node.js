@@ -10,10 +10,11 @@ app.set("port", 4000);
 app.listen(app.get("port"));
 console.log(`Escuchando comunicacion con el puerto ${app.get("port")}`);
 
-//Middlewares
 app.use(cors({
-    origin: ["http://127.0.0.1:5500"]
+    origin: ["http://127.0.0.1:5500", "http://localhost:5500"],
+    methods: ['GET', 'POST', 'DELETE', 'PUT']
 }));
+
 app.use(morgan("dev"));
 
 //Rutas
@@ -38,14 +39,15 @@ app.post('/Cliente', async (req, res) => {
     }
 });
 
-app.delete('/Cliente/:id', async (req, res) => {
-    const { id } = req.params;
+app.delete('/Cliente/:id_Cliente', async (req, res) => {
+    const { id_Cliente } = req.params; 
+    console.log(id_Cliente); 
 
     try {
         const connection = await database.getConnection();
-        const query = 'DELETE FROM Cliente WHERE id_Cliente = ?';
+        const query = 'DELETE FROM tpsoderia.cliente WHERE id_Cliente = ?';
         
-        const result = await connection.query(query, [id]);
+        const [result] = await connection.query(query, [id_Cliente]);
 
         if (result.affectedRows > 0) {
             res.status(200).json({ success: true, message: 'Cliente eliminado con éxito' });
