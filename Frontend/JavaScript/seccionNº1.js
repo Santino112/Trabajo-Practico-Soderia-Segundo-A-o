@@ -1,6 +1,7 @@
 import { getClientes } from "./Services/clientesServices.js";
 import { borrarContenidoInputs} from "./funciones.js";
-const contenedorPrincipal = document.getElementById('contenedorPrincipal');
+
+const columnas = ['ID', 'Nombre', 'Apellido', 'Telefono', 'Direccion', 'Dni', 'Localidad', 'Barrio'];
 
 const tablaCliente = (clienteColumnas, datos = []) => {
     const cajaTabla = document.querySelector('.cajaTabla');
@@ -29,7 +30,7 @@ const tablaCliente = (clienteColumnas, datos = []) => {
                 <td>${fila.id_Localidad}</td>
                 <td>${fila.id_Barrio}</td>
                 <td>
-                    <button type="button" class="btn btn-success btnActualizar" data-bs-toggle="modal" data-bs-target="#actualizarCliente">
+                    <button type="button" class="btn btn-success btnActualizar" data-bs-toggle="modal" data-bs-target="#actualizarCliente" data-id="${fila.id_Cliente}">
                         <i class="fa-solid fa-pen"></i>
                     </button>
                     <button type="button" class="btn btn-danger btnBorrar" data-id="${fila.id_Cliente}">
@@ -56,6 +57,7 @@ const tablaCliente = (clienteColumnas, datos = []) => {
                     
                     if (result.success) {
                         alert('Cliente eliminado con éxito');
+                        await cargarClientes();
                         // e.currentTarget.closest('tr').remove();
                     } else {
                         alert('Error al eliminar el cliente');
@@ -65,10 +67,78 @@ const tablaCliente = (clienteColumnas, datos = []) => {
                 }
             }
         });
+        getClientes();
+    });
+
+    async function cargarDatosCliente(clienteId) {
+        try {
+            const response = await fetch(`http://127.0.0.1:4000/Cliente/${clienteId}`);
+            const cliente = await response.json();
+
+            document.getElementById('nombreActualizar').value = cliente.nombre;
+            document.getElementById('apellidoActualizar').value = cliente.apellido;
+            document.getElementById('telefonoActualizar').value = cliente.telefono;
+            document.getElementById('direccionActualizar').value = cliente.direccion;
+            document.getElementById('numeroDocumentoActualizar').value = cliente.numeroDocumento;
+            document.getElementById('localidadActualizar').value = cliente.localidad;
+            document.getElementById('barrioActualizar').value = cliente.barrio;
+    
+            const modal = new bootstrap.Modal(document.getElementById('actualizarCliente'));
+            modal.show();
+        } catch (error) {
+            console.error('Error al cargar los datos del cliente:', error);
+        }
+    }
+
+    document.getElementById('formModificarCliente').addEventListener('submit', async function (event) {
+        event.preventDefault();
+    
+        const clienteId = this.getAttribute('data-id');
+        const nombre = document.getElementById('nombre').value;
+        const apellido = document.getElementById('apellido').value;
+        const telefono = document.getElementById('telefono').value;
+        const direccion = document.getElementById('direccion').value;
+        const numeroDocumento = document.getElementById('numeroDocumento').value;
+        const localidad = document.getElementById('localidad').value;
+        const barrio = document.getElementById('barrio').value;
+    
+        const clienteModificado = {
+            nombre: nombre,
+            apellido: apellido,
+            telefono: telefono,
+            direccion: direccion,
+            numeroDocumento: numeroDocumento,
+            localidad: localidad,
+            barrio: barrio,
+        };
+    
+        try {
+            const response = await fetch(`http://127.0.0.1:4000/Cliente/${clienteId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(clienteModificado)
+            });
+    
+            if (response.ok) {
+                alert('Cliente modificado con éxito');
+                await cargarClientes();
+            } else {
+                alert('Hubo un error al modificar el cliente');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+    
+    document.querySelectorAll('.btnActualizar').forEach(button => {
+        button.addEventListener('click', function() {
+            const clienteId = this.getAttribute('data-id');
+            cargarDatosCliente(clienteId);
+        });
     });
 };
-
-const columnas = ['ID', 'Nombre', 'Apellido', 'Telefono', 'Direccion', 'Dni', 'Localidad', 'Barrio'];
 
 document.getElementById('clientes').addEventListener("click", async () => {
     console.log('Botón presionado');
@@ -137,8 +207,14 @@ document.getElementById('clientes').addEventListener("click", async () => {
                                 <label for="localidad">Seleccione la localidad</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="text" id="barrio" class="form-control input" placeholder="Barrio">
-                                <label for="barrio">Barrio</label>
+                                <select class="form-select" aria-label="Default select example" id="barrio">
+                                    <option selected></option>
+                                    <option value="1">San Juan Bautista</option>
+                                    <option value="2">San Justo</option>
+                                    <option value="3">Rivadavia</option>
+                                    <option value="4">Industrial</option>
+                                </select>
+                                <label for="barrio">Seleccione el barrio</label>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -154,32 +230,32 @@ document.getElementById('clientes').addEventListener("click", async () => {
                 <div class="modal-content modal2">
                     <form>
                         <div class="modal-header">
-                            <h5 class="modal-title">Actualizar datos del cliente</h5>
+                            <h5 class="modal-title">Modificar datos del cliente</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-floating mb-3">
                                 <input type="text" id="nombre" class="form-control input" placeholder="Nombre">
-                                <label for="nombre">Nombre</label>
+                                <label for="nombreActualizar">Nombre</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="text" id="apellido" class="form-control input" placeholder="Apellido">
-                                <label for="apellido">Apellido</label>
+                                <label for="apellidoActualizar">Apellido</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="number" id="telefono" class="form-control input" placeholder="Teléfono">
-                                <label for="telefono">Teléfono</label>
+                                <label for="telefonoActualizar">Teléfono</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="text" id="direccion" class="form-control input" placeholder="Dirección">
-                                <label for="direccion">Dirección</label>
+                                <label for="direccionActualizar">Dirección</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="number" id="numeroDocumento" class="form-control input" placeholder="D.N.I.">
-                                <label for="numeroDocumento">D.N.I.</label>
+                                <label for="numeroDocumentoActualizar">D.N.I.</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <select class="form-select" aria-label="Default select example" id="localidad">
+                                <select class="form-select" aria-label="Default select example" id="localidadActualizar">
                                     <option selected></option>
                                     <option value="1">Villa María</option>
                                     <option value="2">Villa Nueva</option>
@@ -187,13 +263,19 @@ document.getElementById('clientes').addEventListener("click", async () => {
                                 <label for="localidad">Seleccione la localidad</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="text" id="barrio" class="form-control input" placeholder="Barrio">
-                                <label for="barrio">Barrio</label>
+                                <select class="form-select" aria-label="Default select example" id="barrioActualizar">
+                                    <option selected></option>
+                                    <option value="1">San Juan Bautista</option>
+                                    <option value="2">San Justo</option>
+                                    <option value="3">Rivadavia</option>
+                                    <option value="4">Industrial</option>
+                                </select>
+                                <label for="barrio">Seleccione el barrio</label>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" id="cerrar" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Actualizar</button>
+                            <button type="submit" class="btn btn-success">Modificar</button>
                         </div>
                     </form>
                 </div>
@@ -207,7 +289,7 @@ document.getElementById('clientes').addEventListener("click", async () => {
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        ¿Estás seguro que deseas deshabilitar a este cliente?
+                        ¿Estás seguro que deseas borrar este registro?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -220,20 +302,18 @@ document.getElementById('clientes').addEventListener("click", async () => {
 
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-    
+
     try {
         const datosClientes = await getClientes();
-        console.log(datosClientes);
         const clientesFiltrados = Array.isArray(datosClientes) ? datosClientes[0] : datosClientes;
         tablaCliente(columnas, clientesFiltrados);
     } catch (error) {
         console.error('Error al obtener los datos de clientes:', error);
     }
-    borrarContenidoInputs();
 
     document.getElementById('formAgregarCliente').addEventListener('submit', async function (event) {
         event.preventDefault();
-
+    
         const nombre = document.getElementById('nombre').value;
         const apellido = document.getElementById('apellido').value;
         const telefono = document.getElementById('telefono').value;
@@ -262,11 +342,15 @@ document.getElementById('clientes').addEventListener("click", async () => {
             });
             if (response.ok) {
                 alert('Cliente agregado con éxito');
+                await cargarClientes();
             } else {
                 alert('Hubo un error al agregar el cliente');
             }
         } catch (error) {
             console.error('Error:', error);
         }
+        getClientes();
     });
+
+    borrarContenidoInputs();
 });

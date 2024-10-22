@@ -60,6 +60,29 @@ app.delete('/Cliente/:id_Cliente', async (req, res) => {
     }
 });
 
+app.put('/Cliente/:id', async (req, res) => {
+    const clienteId = req.params.id;
+    const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio } = req.body;
+
+    const sqlQuery = `
+        UPDATE clientes
+        SET nombre = ?, apellido = ?, telefono = ?, direccion = ?, numeroDocumento = ?, localidad = ?, barrio = ?
+        WHERE id_Cliente = ?`;
+
+    try {
+        const result = await db.query(sqlQuery, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio, clienteId]);
+
+        if (result.affectedRows > 0) {
+            res.status(200).json({ message: 'Cliente actualizado con éxito' });
+        } else {
+            res.status(404).json({ message: 'Cliente no encontrado' });
+        }
+    } catch (error) {
+        console.error('Error al actualizar el cliente:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    }
+});
+
 ///////////////////////////////////
 
 app.get('/Pedido', async (req, res) => {
