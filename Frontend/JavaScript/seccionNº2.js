@@ -155,7 +155,6 @@ document.getElementById('pedidos').addEventListener("click", async () => {
     try {
         const datosPedidos = await getPedidos();
         const pedidosFiltrados = Array.isArray(datosPedidos) ? datosPedidos[0] : datosPedidos;
-        tablas(columnas, pedidosFiltrados);
     } catch (error) {
         console.error('Error al obtener los datos de clientes:', error);
     }

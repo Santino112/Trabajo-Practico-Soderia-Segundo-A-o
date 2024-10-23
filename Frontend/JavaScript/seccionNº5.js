@@ -88,7 +88,6 @@ document.getElementById('rutasEntrega').addEventListener("click", async () => {
     try {
         const datosRutas = await getRutaEntrega();
         const rutasFiltrados = Array.isArray(datosRutas) ? datosRutas[0] : datosRutas;
-        tablas(columnas, rutasFiltrados);
     } catch (error) {
         console.error('Error al obtener los datos de clientes:', error);
     }

@@ -151,7 +151,6 @@ document.getElementById('inventario').addEventListener("click", async () => {
     try {
         const datosProductos = await getProductos();
         const productosFiltrados = Array.isArray(datosProductos) ? datosProductos[0] : datosProductos;
-        tablas(columnas, productosFiltrados);
     } catch (error) {
         console.error('Error al obtener los datos de clientes:', error);
     }

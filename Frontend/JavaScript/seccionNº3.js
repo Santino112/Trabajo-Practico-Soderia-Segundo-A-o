@@ -110,7 +110,6 @@ document.getElementById('proveedores').addEventListener("click", async () => {
     try {
         const datosProveedores = await getProveedor();
         const proveedoresFiltrados = Array.isArray(datosProveedores) ? datosProveedores[0] : datosProveedores;
-        tablas(columnas, proveedoresFiltrados);
     } catch (error) {
         console.error('Error al obtener los datos de clientes:', error);
     }

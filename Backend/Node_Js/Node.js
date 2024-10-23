@@ -18,12 +18,39 @@ app.use(cors({
 app.use(morgan("dev"));
 
 //Rutas
+//Toma todos los registros de clientes de la tabla cliente
 app.get('/Cliente', async (req, res) => {
-    const connection = await database.getConnection();
-    const resultado = await connection.query("SELECT * FROM tpsoderia.cliente;");
-    res.json(resultado);
+    try {
+        const connection = await database.getConnection();
+        const [resultado] = await connection.query("SELECT * FROM tpsoderia.cliente;");
+        res.json(resultado);
+    } catch (error) {
+        console.error('Error al obtener clientes:', error);
+        res.status(500).json({ error: 'Error al obtener los clientes' });
+    }
 });
 
+//Toma todos los registros de clientes de la tabla cliente dependiendo de una ID especifica
+app.get('/Cliente/:id_Cliente', async (req, res) => {
+    const { id_Cliente } = req.params;
+
+    try {
+        const connection = await database.getConnection();
+        const query = 'SELECT * FROM tpsoderia.cliente WHERE id_Cliente = ?';
+        const [resultado] = await connection.query(query, [id_Cliente]);
+
+        if (resultado.length > 0) {
+            res.json(resultado[0]); 
+        } else {
+            res.status(404).json({ message: 'Cliente no encontrado' });
+        }
+    } catch (error) {
+        console.error('Error al obtener el cliente:', error);
+        res.status(500).json({ error: 'Error al obtener el cliente' });
+    }
+});
+
+//Inserta un nuevo registro de cliente en la tabla cliente
 app.post('/Cliente', async (req, res) => {
     const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio } = req.body;
 
@@ -39,6 +66,7 @@ app.post('/Cliente', async (req, res) => {
     }
 });
 
+//Borra un registro de cliente en la tabla cliente
 app.delete('/Cliente/:id_Cliente', async (req, res) => {
     const { id_Cliente } = req.params; 
     console.log(id_Cliente); 
@@ -60,17 +88,19 @@ app.delete('/Cliente/:id_Cliente', async (req, res) => {
     }
 });
 
+//Actualiza el registro de un cliente dependiendo de su ID
 app.put('/Cliente/:id', async (req, res) => {
     const clienteId = req.params.id;
     const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio } = req.body;
 
     const sqlQuery = `
-        UPDATE clientes
-        SET nombre = ?, apellido = ?, telefono = ?, direccion = ?, numeroDocumento = ?, localidad = ?, barrio = ?
+        UPDATE tpsoderia.cliente
+        SET nombre = ?, apellido = ?, telefono = ?, direccion = ?, numeroDocumento = ?, id_Localidad = ?, id_Barrio = ?
         WHERE id_Cliente = ?`;
 
     try {
-        const result = await db.query(sqlQuery, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio, clienteId]);
+        const connection = await database.getConnection();
+        const result = await connection.query(sqlQuery, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio, clienteId]);
 
         if (result.affectedRows > 0) {
             res.status(200).json({ message: 'Cliente actualizado con éxito' });
@@ -83,7 +113,7 @@ app.put('/Cliente/:id', async (req, res) => {
     }
 });
 
-///////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 app.get('/Pedido', async (req, res) => {
     const connection = await database.getConnection();
