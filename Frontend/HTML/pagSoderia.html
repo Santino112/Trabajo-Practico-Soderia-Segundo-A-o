@@ -26,7 +26,7 @@
                                 <a class="nav-link mx-lg-2" aria-current="page" href="#inicio">Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mx-lg-2" href="#infoPyme">¿Quiénes Somos?</a>
+                                <a class="nav-link mx-lg-2" href="#infoPyme">Nosotros</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link mx-lg-2" href="#Servicios">Servicios</a>
@@ -43,33 +43,73 @@
                 </button>
             </div>
         </nav>    
-        <div class="Inicio container-fluid" id="inicio">
-            <img src="/Frontend/Imagenes/empresa.jpg" class="img-fluid fotoEmpresa">
-            <div class="container-fluid">
-                <p>Soderia maria ester</p>
-                <h1>TU MEJOR SODA</h1>
+        <div id="carouselExampleIndicators" class="carousel slide">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div >
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/Frontend/Imagenes/empresa.jpg" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="/Frontend/Imagenes/empresa2.jpg" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="/Frontend/Imagenes/empresa3.jpg" class="d-block w-100" alt="...">
+                </div>
             </div>
-        </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+            </div>
         <div class="contenedorInfoPyme container-fluid" id="infoPyme">
-            <div class="infoPyme container-sm">
-                <div class="container-sm textos">
-                    <h2 class="subtituloQuienesSomos">¿Quiénes Somos?</h2>
-                    <p class="parrafoQuienesSomos">Somos una empresa familiar con una larga tradición en la producción y distribución de bebidas carbonatadas, comprometidos con la calidad y la satisfacción de nuestros clientes.</p>
+            <div class="infoPyme container-fluid">
+        
+                <!-- Sección ¿Quiénes Somos? -->
+                <div class="container-fluid cajas d-flex align-items-center quienesSomos shadow-lg">
+                    <img class="img-fluid imagenLateral rounded imagenInfo primeraImagen " src="/Frontend/Imagenes/quienes somos.jpg" alt="Imagen de Quiénes Somos">
+                    <div class="textosInfoPyme">
+                        <h2 class="tituloInfo">¿Quiénes Somos?</h2>
+                        <p class="parrafoQuienesSomos textoInfo">Somos una empresa familiar con una larga tradición en la producción y distribución de bebidas carbonatadas, comprometidos con la calidad y la satisfacción de nuestros clientes.</p>
+                    </div>
                 </div>
-                <div class="container-md textos">
-                    <h2 class="subtituloQuienesSomos">Nuestra Historia</h2>
-                    <p class="parrafoQuienesSomos">Sodería María Ester fue fundada hace más de 35 años con el objetivo de brindar productos de alta calidad a nuestra comunidad. Desde nuestros humildes comienzos, hemos crecido y evolucionado, pero nuestro compromiso con la excelencia y el servicio al cliente se ha mantenido inalterable.</p>
+        
+                <!-- Sección Nuestra Historia -->
+                <div class="container-fluid cajas d-flex align-items-center nuestraHistoria shadow-lg">
+                    <div class="textosInfoPyme">
+                        <h2 class="tituloInfo">Nuestra Historia</h2>
+                        <p class="parrafoQuienesSomos textoInfo">Sodería María Ester fue fundada hace más de 35 años con el objetivo de brindar productos de alta calidad a nuestra comunidad. Desde nuestros humildes comienzos, hemos crecido y evolucionado, pero nuestro compromiso con la excelencia y el servicio al cliente se ha mantenido inalterable.</p>
+                    </div>
+                    <img class="img-fluid imagenLateral rounded imagenInfo segundaImagen" src="/Frontend/Imagenes/nuestra historia.jpg" alt="Imagen de Nuestra Historia">
                 </div>
-                <div class="container-sm textos">
-                    <h2 class="subtituloQuienesSomos">Misión</h2>
-                    <p class="parrafoQuienesSomos">Nuestra misión es proporcionar a nuestros clientes los mejores servicios de reparto, entrega y producción de sodas en Villa María, garantizando calidad y frescura en cada botella. Nos esforzamos por mantenernos a la vanguardia de la industria, utilizando procesos de producción innovadores y sostenibles, los cuales nos permiten destacar del resto.</p>
+        
+                <!-- Sección Misión -->
+                <div class="container-fluid cajas d-flex align-items-center mision shadow-lg">
+                    <img class="img-fluid imagenLateral rounded imagenInfo terceraImagen" src="/Frontend/Imagenes/mision.jpg" alt="Imagen de Misión">
+                    <div class="textosInfoPyme">
+                        <h2 class="tituloInfo">Misión</h2>
+                        <p class="parrafoQuienesSomos textoInfo">Nuestra misión es proporcionar a nuestros clientes los mejores servicios de reparto, entrega y producción de sodas en Villa María, garantizando calidad y frescura en cada botella. Nos esforzamos por mantenernos a la vanguardia de la industria, utilizando procesos de producción innovadores y sostenibles, los cuales nos permiten destacar del resto.</p>
+                    </div>
                 </div>
-                <div class="container-sm textos">
-                    <h2 class="subtituloQuienesSomos">Visión</h2>
-                    <p class="parrafoQuienesSomos">Aspiramos a ser la sodería preferida en Villa María y sus alrededores, reconocidos por nuestra dedicación a la calidad y el servicio. Queremos seguir siendo una parte integral de la vida de nuestra comunidad, ofreciendo productos que nuestros clientes puedan disfrutar con confianza.</p>
+        
+                <!-- Sección Visión -->
+                <div class="container-fluid cajas d-flex align-items-center vision shadow-lg">
+                    <div class="textosInfoPyme">
+                        <h2 class="tituloInfo">Visión</h2>
+                        <p class="parrafoQuienesSomos textoInfo">Aspiramos a ser la sodería preferida en Villa María y sus alrededores, reconocidos por nuestra dedicación a la calidad y el servicio. Queremos seguir siendo una parte integral de la vida de nuestra comunidad, ofreciendo productos que nuestros clientes puedan disfrutar con confianza.</p>
+                    </div>
+                    <img class="img-fluid imagenLateral rounded imagenInfo cuartaImagen" src="/Frontend/Imagenes/meta.jpg" alt="Imagen de Visión">
                 </div>
+        
             </div>
-        </div>
+        </div>        
         <div class="servicios container-fluid" id="Servicios">
             <div class="infoServicios container-sm">
                 <div class="container-sm textos">
@@ -130,6 +170,6 @@
             </div>
         </footer>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-Xy+P6HIzP9e/gQ6upMcQDkGFpmcX+fnuTV4T8Tr+P5f4ab8uBCLThs8CXkRTNkFG" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

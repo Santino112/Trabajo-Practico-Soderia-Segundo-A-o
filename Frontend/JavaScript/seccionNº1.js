@@ -121,10 +121,6 @@ document.getElementById('clientes').addEventListener("click", async () => {
                 <h2 class="h2 text-center">Clientes</h2>
                 <div class="cajaTabla container table-responsive-sm table-responsive-vertical"></div>
             </div>
-            <div class="segundaCaja shadow-lg p-3 container">
-                <h2 class="h2 text-center h2Derecha">Clientes dados de baja</h2>
-                <div class="cajaTabla container table-responsive-sm table-responsive-vertical"></div>
-            </div>
         </div>
         <div class="modal" data-bs-theme="dark" id="agregarCliente" tabindex="-1">
             <div class="modal-md modal-dialog modal-dialog-centered">
