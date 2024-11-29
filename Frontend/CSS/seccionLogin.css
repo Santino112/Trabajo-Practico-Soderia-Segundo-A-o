@@ -1,4 +1,3 @@
-/* Reset de estilos básicos */
 *,::before,::after {
     box-sizing: border-box;
     margin: 0;
@@ -76,26 +75,6 @@ main {
     color: #000;
 }
 
-@media (min-width: 991px) {
-    .nav-link::before {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 0;
-        height: 2px;
-        background-color: #009970;
-        visibility: hidden;
-        transition: 0.3s ease-in-out;
-    }
-
-    .nav-link:hover::before, .nav-link.active::before {
-        width: 100%;
-        visibility: visible;
-    }
-}
-
 .contenedorTodo {
     display: flex;
     justify-content: center;
@@ -149,11 +128,32 @@ form {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     margin-top: 2vh;
     font-size: 1.1rem;
+    cursor: pointer;
 }
 
 .h2 {
     margin-bottom: 2vh;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+@media (min-width: 991px) {
+    .nav-link::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 2px;
+        background-color: #009970;
+        visibility: hidden;
+        transition: 0.3s ease-in-out;
+    }
+
+    .nav-link:hover::before, .nav-link.active::before {
+        width: 100%;
+        visibility: visible;
+    }
 }
 
 /* Responsivo para pantallas pequeñas */

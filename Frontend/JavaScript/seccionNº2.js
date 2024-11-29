@@ -1,13 +1,13 @@
 import { getPedidos } from "./Services/pedidosServices.js";
 import { borrarContenidoInputs, formatDate} from "./funciones.js";
 
-const columnas = ['ID', 'Cliente', 'Detalles', 'Creación', 'Entrega', 'Dirección', 'Recorrido', 'Vehiculo'];
+const columnas = ['ID', 'Cliente', 'Detalles', 'Creación', 'Entrega', 'Dirección', 'Recorrido', 'Vehiculo', 'Estado'];
 
 const tablaPedido = (pedidoColumnas, datos = []) => {
     const cajaTabla = document.querySelector('.cajaTabla');
 
     let tabla = `  
-        <table class="table tabla table-striped table-dark table-borderless table-hover shadow-lg p-3">
+        <table class="table tabla table-striped table-dark table-borderless table-hover shadow-lg p-3" id="tablaPedido">
             <thead>
                 <tr>
     `;
@@ -32,6 +32,7 @@ const tablaPedido = (pedidoColumnas, datos = []) => {
                 <td>${fila.direccion}</td>
                 <td>${fila.id_Recorrido}</td>
                 <td>${fila.id_Transporte}</td>
+                <td>${fila.estado}</td>
                 <td>
                     <button type="button" class="btn btn-success btnActualizar" data-bs-toggle="modal" data-bs-target="#actualizarPedido" data-id="${fila.id_Pedido}">
                         <i class="fa-solid fa-pen"></i>
@@ -119,10 +120,34 @@ document.getElementById('pedidos').addEventListener("click", async () => {
             </div>
         </div>
         <div class="contenedor-flex">
-                <div class="primeraCaja shadow-lg p-3 container">
-                    <h2 class="h2 text-center">Pedidos</h2>
-                    <div class="cajaTabla container table-responsive table-responsive-vertical"></div>
+            <div class="primeraCaja shadow-lg p-3 container">
+                <div class="contenedorEncabezado">
+                    <h2 class="h2">Pendientes</h2>
+                    <div class="input-group inputsPedido">
+                        <span class="input-group-text" id="inputGroup-sizing-default">
+                             <i class="bi bi-database-fill"></i>
+                        </span>
+                        <input type="text" class="form-control" id="filtroNombre" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Buscar por nombre del cliente">
+                    </div>
+                    <div class="input-group inputsPedido">
+                        <span class="input-group-text" id="inputGroup-sizing-default">
+                            <i class="bi bi-database-fill"></i>
+                        </span>
+                        <input type="date" class="form-control" id="filtroFecha" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Buscar por fecha" disabled>
+                    </div>
+                    <div class="input-group inputsPedido">
+                        <span class="input-group-text" id="inputGroup-sizing-default">
+                             <i class="bi bi-database-fill"></i>
+                        </span>
+                        <select class="form-select" aria-label="Default select example" id="filtroEstado">
+                            <option value="Completado">Completado</option>
+                            <option value="Incompleto">Incompleto</option>
+                        </select>
+                    </div>
                 </div>
+                    <div class="b-example-divider"></div>
+                <div class="cajaTabla container table-responsive table-responsive-vertical"></div>
+            </div>
         </div>
         <div class="modal" data-bs-theme="dark" id="agregarPedido" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
@@ -131,40 +156,60 @@ document.getElementById('pedidos').addEventListener("click", async () => {
                             <h5 class="modal-title">Agregar nuevo pedido</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form id="formAgregarPedido">
+                        <form id="formAgregarPedido" class="needs-validation" novalidate>
                             <div class="modal-body">
                                 <div class="form-floating mb-3">
-                                    <input type="text" id="cliente" class="form-control input" placeholder="Cliente">
+                                    <input type="text" id="cliente" class="form-control input" placeholder="Cliente" required>
                                     <label for="floatingInput">Cliente</label>
+                                    <div class="invalid-feedback">
+                                        Debe ingresar un nombre.
+                                    </div>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" id="detalle" class="form-control input" placeholder="Detalle del pedido">
+                                    <input type="text" id="detalle" class="form-control input" placeholder="Detalle del pedido" required>
                                     <label for="floatingInput1">Detalle del pedido</label>
+                                    <div class="invalid-feedback">
+                                        Debe ingresar los detalles del pedido.
+                                    </div>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="date" id="fechaCreacion" class="form-control input" placeholder="Fecha de creación">
+                                    <input type="date" id="fechaCreacion" class="form-control input" placeholder="Fecha de creación" required>
                                     <label for="floatingInput2">Fecha de creación</label>
+                                    <div class="invalid-feedback">
+                                        Debe ingresar una fecha correcta.
+                                    </div>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="date" id="fechaEntrega" class="form-control input" placeholder="Fecha de entrega">
+                                    <input type="date" id="fechaEntrega" class="form-control input" placeholder="Fecha de entrega" required>
                                     <label for="floatingInput3">Fecha de entrega</label>
+                                    <div class="invalid-feedback">
+                                        Debe ingresar una fecha correcta.
+                                    </div>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" id="direccion" class="form-control input" placeholder="Dirección">
+                                    <input type="text" id="direccion" class="form-control input" placeholder="Dirección" required>
                                     <label for="floatingInput4">Dirección</label>
+                                    <div class="invalid-feedback">
+                                        Debe ingresar una dirección.
+                                    </div>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <select class="form-select" aria-label="Default select example" id="recorrido">
-                                        <option selected></option>
-                                        <option value="1">San Juan Bautista</option>
+                                    <input type="text" id="estado" class="form-control input" placeholder="Estado del pedido" required>
+                                    <label for="floatingInput4">Estado</label>
+                                    <div class="invalid-feedback">
+                                        Debe ingresar el estado del pedido.
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" aria-label="Default select example" id="recorrido" required>
+                                        <option selected value="1">San Juan Bautista</option>
                                         <option value="2">San Justo</option>
                                     </select>
                                     <label for="select">Seleccione el recorrido</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <select class="form-select" aria-label="Default select example" id="transporte">
-                                        <option selected></option>
-                                        <option value="1">Hilux</option>
+                                    <select class="form-select" aria-label="Default select example" id="transporte" required>
+                                        <option selected value="1">Hilux</option>
                                         <option value="2">Trafic</option>
                                     </select>
                                     <label for="select">Seleccione el transporte</label>
@@ -206,6 +251,10 @@ document.getElementById('pedidos').addEventListener("click", async () => {
                                 <div class="form-floating mb-3">
                                     <input type="text" id="direccionActualizar" class="form-control input" placeholder="Dirección">
                                     <label for="direccionActualizar">Dirección</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" id="estadoActualizar" class="form-control input" placeholder="Estado del pedido" required>
+                                    <label for="estadoActualizar">Estado</label>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <select class="form-select" aria-label="Default select example" id="recorridoActualizar">
@@ -270,6 +319,7 @@ document.getElementById('pedidos').addEventListener("click", async () => {
             const fechaCreacion = document.getElementById('fechaCreacion').value; 
             const fechaEntrega = document.getElementById('fechaEntrega').value; 
             const direccion = document.getElementById('direccion').value; 
+            const estado = document.getElementById('estado').value; 
             const recorrido = document.getElementById('recorrido').value;
             const transporte = document.getElementById('transporte').value; 
 
@@ -279,6 +329,7 @@ document.getElementById('pedidos').addEventListener("click", async () => {
                 fechaCreacion: formatDate(fechaCreacion),
                 fechaEntrega: formatDate(fechaEntrega),
                 direccion: direccion,
+                estado: estado,
                 recorrido: recorrido,
                 transporte: transporte
             };
@@ -313,6 +364,7 @@ document.getElementById('pedidos').addEventListener("click", async () => {
             const fechaCreacion = document.getElementById('fechaCreacionActualizar').value;
             const fechaEntrega = document.getElementById('fechaEntregaActualizar').value;
             const direccion = document.getElementById('direccionActualizar').value;
+            const estado = document.getElementById('estadoActualizar').value;
             const recorrido = document.getElementById('recorridoActualizar').value;
             const transporte = document.getElementById('transporteActualizar').value;
 
@@ -325,6 +377,7 @@ document.getElementById('pedidos').addEventListener("click", async () => {
                 fechaCreacion: formattedFechaCreacion,
                 fechaEntrega: formattedFechaEntrega,
                 direccion: direccion,
+                estado: estado,
                 recorrido: recorrido,
                 transporte: transporte
             };
@@ -352,6 +405,50 @@ document.getElementById('pedidos').addEventListener("click", async () => {
                 console.error('Error al actualizar el pedido:', error);
             }
         });
+
+        function filtrarTabla() {
+            const input = document.getElementById('filtroNombre').value.toLowerCase(); // Filtro por nombre
+            const filtroEstado = document.getElementById('filtroEstado').value.toLowerCase(); // Filtro por estado
+            const filas = document.querySelectorAll('#tablaPedido tbody tr'); // Filas de la tabla
+          
+            filas.forEach(fila => {
+              const nombre = fila.cells[1].textContent.toLowerCase(); // Columna 'Nombre'
+              const estado = fila.cells[8].textContent.toLowerCase(); // Columna 'Estado'
+          
+              // Evaluar los filtros
+              const coincideNombre = input === '' || nombre.includes(input);
+              const coincideEstado = filtroEstado === 'todos' || estado === filtroEstado;
+          
+              // Mostrar la fila si cumple ambos filtros
+              if (coincideNombre && coincideEstado) {
+                fila.style.display = ''; // Mostrar fila
+              } else {
+                fila.style.display = 'none'; // Ocultar fila
+              }
+            });
+          }
+          
+        document.getElementById('filtroNombre').addEventListener('input', filtrarTabla);
+        document.getElementById('filtroEstado').addEventListener('change', filtrarTabla);
+
+        (() => {
+            'use strict'
+          
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+          
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+              form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                  event.preventDefault()
+                  event.stopPropagation()
+                }
+          
+                form.classList.add('was-validated')
+              }, false)
+            })
+        })()
 
         borrarContenidoInputs();
     });

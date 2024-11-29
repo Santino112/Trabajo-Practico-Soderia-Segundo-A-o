@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,9 +41,9 @@
             <a class="btn botones" id="inicio">Inicio</a>
             <a class="btn botones" id="clientes">Clientes</a>
             <a class="btn botones" id="pedidos">Pedidos</a>
-            <a class="btn botones" id="proveedores">Proveedores</a>
-            <a class="btn botones" id="inventario">Inventario</a>
-            <a class="btn botones" id="rutasEntrega">Rutas de entrega</a>
+            <a class="btn botones" id="barrios">Barrios</a>
+            <a class="btn botones" type="button" data-bs-toggle="modal" data-bs-target="#seccionSinServicio">Inventario</a>
+            <a class="btn botones" type="button" data-bs-toggle="modal" data-bs-target="#seccionSinServicio">Rutas de entrega</a>
             <div class="contenedorBotones">
                   <div class="dropdown">
                     <a class="btn btn-lg icono botones" type="button" aria-controls="offcanvasWithBothOptions" data-bs-toggle="dropdown" aria-expanded="false">
@@ -61,6 +61,18 @@
           </div>
       </div>
     </main>
+    <div class="modal fade" id="seccionSinServicio" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered"">
+        <div class="modal-content modal1">
+          <div class="modal-body">
+            Esta sección no se encuentra disponible.
+          </div>
+          <div class="modal-footer">
+            <a type="button" class="btn botones cancelar" data-bs-dismiss="modal">Cerrar</a>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered"">
         <div class="modal-content modal1">
@@ -69,7 +81,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            ¿Estás seguro de que deseas cerrar sesión?
+            ¿Estás seguro de que quieres cerrar sesión?
           </div>
           <div class="modal-footer">
             <a type="button" class="btn botones cancelar" data-bs-dismiss="modal">Cancelar</a>

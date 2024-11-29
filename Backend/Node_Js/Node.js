@@ -17,6 +17,32 @@ app.use(cors({
 
 app.use(morgan("dev"));
 
+app.post("/login", async (req, res) => {
+    try {
+        const { usuario, contraseña } = req.body;
+        const connection = await database.getConnection();
+        console.log("Datos recibidos:", { usuario, contraseña });
+
+        // Buscar el usuario en la base de datos
+        const [results] = await connection.query("SELECT * FROM tpsoderia.usuario WHERE usuario = ?", [usuario]);
+        const user = results[0]; // Extraer el primer usuario encontrado
+
+        if (user) {
+            // Comparar directamente las contraseñas
+            if (contraseña === user.contraseña) {
+                res.status(200).send("Inicio de sesión exitoso.");
+            } else {
+                res.status(401).send("Usuario o contraseña incorrectos.");
+            }
+        } else {
+            res.status(401).send("Usuario o contraseña incorrectos.");
+        }
+    } catch (error) {
+        console.error("Error en el inicio de sesión:", error);
+        res.status(500).send("Error en el inicio de sesión.");
+    }
+});
+
 //Rutas
 //Toma todos los registros de clientes de la tabla cliente
 app.get('/Cliente', async (req, res) => {
@@ -52,12 +78,12 @@ app.get('/Cliente/:id_Cliente', async (req, res) => {
 
 //Inserta un nuevo registro de cliente en la tabla cliente
 app.post('/Cliente', async (req, res) => {
-    const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio } = req.body;
+    const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio, estado } = req.body;
 
     try {
         const connection = await database.getConnection();
-        const query = 'INSERT INTO tpsoderia.cliente (nombre, apellido, telefono, direccion, numeroDocumento, id_Localidad, id_Barrio) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        const result = await connection.query(query, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio]);
+        const query = 'INSERT INTO tpsoderia.cliente (nombre, apellido, telefono, direccion, numeroDocumento, id_Localidad, id_Barrio, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        const result = await connection.query(query, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio, estado]);
 
         res.status(200).json({ message: 'Cliente agregado con éxito', result });
     } catch (error) {
@@ -89,18 +115,19 @@ app.delete('/Cliente/:id_Cliente', async (req, res) => {
 });
 
 //Actualiza el registro de un cliente dependiendo de su ID
-app.put('/Cliente/:id', async (req, res) => {
-    const clienteId = req.params.id;
-    const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio } = req.body;
+app.put('/Cliente/:id_Cliente', async (req, res) => {
+    const clienteId = req.params.id_Cliente;
+    const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio, estado } = req.body;
 
     const sqlQuery = `
         UPDATE tpsoderia.cliente
-        SET nombre = ?, apellido = ?, telefono = ?, direccion = ?, numeroDocumento = ?, id_Localidad = ?, id_Barrio = ?
+        SET nombre = ?, apellido = ?, telefono = ?, direccion = ?,
+        numeroDocumento = ?, id_Localidad = ?, id_Barrio = ?, estado = ?
         WHERE id_Cliente = ?`;
 
     try {
         const connection = await database.getConnection();
-        const result = await connection.query(sqlQuery, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio, clienteId]);
+        const result = await connection.query(sqlQuery, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio, estado, clienteId]);
 
         if (result.affectedRows > 0) {
             res.status(200).json({ message: 'Cliente actualizado con éxito' });
@@ -110,6 +137,19 @@ app.put('/Cliente/:id', async (req, res) => {
     } catch (error) {
         console.error('Error al actualizar el cliente:', error);
         res.status(500).json({ message: 'Error del servidor' });
+    }
+});
+
+app.get("/cliente/contador", async (req, res) => {
+    try {
+        const connection = await database.getConnection();
+        const result = await connection.query(`
+            SELECT COUNT(*) AS total_clientes FROM tpsoderia.cliente;
+        `);
+        res.json(result);
+    } catch (error) {
+        console.error('Error en la consulta:', error);
+        res.status(500).send('Error en la consulta');
     }
 });
 
@@ -143,12 +183,12 @@ app.get('/Pedido/:id_Pedido', async (req, res) => {
 //Inserta un nuevo registro de cliente en la tabla cliente
 app.post('/Pedido', async (req, res) => {
     console.log('Datos recibidos:', req.body);
-    const { cliente, detallePedido, fechaCreacion, fechaEntrega, direccion, recorrido, transporte } = req.body;
+    const { cliente, detallePedido, fechaCreacion, fechaEntrega, direccion, recorrido, transporte, estado } = req.body;
 
     try {
         const connection = await database.getConnection();
-        const query = 'INSERT INTO tpsoderia.pedido (cliente, detallePedido, fechaCreacion, fechaEntrega, direccion, id_Recorrido, id_Transporte) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        const result = await connection.query(query, [ cliente, detallePedido, fechaCreacion, fechaEntrega, direccion, recorrido, transporte]);
+        const query = 'INSERT INTO tpsoderia.pedido (cliente, detallePedido, fechaCreacion, fechaEntrega, direccion, id_Recorrido, id_Transporte, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        const result = await connection.query(query, [ cliente, detallePedido, fechaCreacion, fechaEntrega, direccion, recorrido, transporte, estado]);
 
         res.status(200).json({ message: 'Pedido agregado con éxito', result });
     } catch (error) {
@@ -204,271 +244,23 @@ app.put('/Pedido/:id', async (req, res) => {
 
 //////////////////////////////////////////////////////////////////////////////////
 
-app.get('/Proveedor', async (req, res) => {
+//Tomamos los datos de la tabla BARRIO a partir de una relacion con la tabla CLIENTE
+
+app.get('/Barrio', async (req, res) => {
     const connection = await database.getConnection();
-    const resultado = await connection.query("SELECT * FROM tpsoderia.proveedor;");
+    const resultado = await connection.query('SELECT * FROM tpsoderia.barrio;')
     res.json(resultado);
 });
 
-app.get('/Proveedor/:id_Proveedor', async (req, res) => {
-    const { id_Cliente } = req.params;
-
-    try {
-        const connection = await database.getConnection();
-        const query = 'SELECT * FROM tpsoderia.cliente WHERE id_Cliente = ?';
-        const [resultado] = await connection.query(query, [id_Cliente]);
-
-        if (resultado.length > 0) {
-            res.json(resultado[0]); 
-        } else {
-            res.status(404).json({ message: 'Cliente no encontrado' });
-        }
-    } catch (error) {
-        console.error('Error al obtener el cliente:', error);
-        res.status(500).json({ error: 'Error al obtener el cliente' });
-    }
-});
-
-//Inserta un nuevo registro de cliente en la tabla cliente
-app.post('/Proveedor', async (req, res) => {
-    const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio } = req.body;
-
-    try {
-        const connection = await database.getConnection();
-        const query = 'INSERT INTO tpsoderia.cliente (nombre, apellido, telefono, direccion, numeroDocumento, id_Localidad, id_Barrio) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        const result = await connection.query(query, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio]);
-
-        res.status(200).json({ message: 'Cliente agregado con éxito', result });
-    } catch (error) {
-        console.error('Error al insertar el cliente:', error);
-        res.status(500).json({ error: 'Error al agregar el cliente' });
-    }
-});
-
-//Borra un registro de cliente en la tabla cliente
-app.delete('/Proveedor/:id_Proveedor', async (req, res) => {
-    const { id_Cliente } = req.params; 
-    console.log(id_Cliente); 
-
-    try {
-        const connection = await database.getConnection();
-        const query = 'DELETE FROM tpsoderia.cliente WHERE id_Cliente = ?';
-        
-        const [result] = await connection.query(query, [id_Cliente]);
-
-        if (result.affectedRows > 0) {
-            res.status(200).json({ success: true, message: 'Cliente eliminado con éxito' });
-        } else {
-            res.status(404).json({ success: false, message: 'Cliente no encontrado' });
-        }
-    } catch (error) {
-        console.error('Error al eliminar el cliente:', error);
-        res.status(500).json({ success: false, message: 'Error al eliminar el cliente' });
-    }
-});
-
-//Actualiza el registro de un cliente dependiendo de su ID
-app.put('/Proveedor/:id', async (req, res) => {
-    const clienteId = req.params.id;
-    const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio } = req.body;
-
-    const sqlQuery = `
-        UPDATE tpsoderia.cliente
-        SET nombre = ?, apellido = ?, telefono = ?, direccion = ?, numeroDocumento = ?, id_Localidad = ?, id_Barrio = ?
-        WHERE id_Cliente = ?`;
-
-    try {
-        const connection = await database.getConnection();
-        const result = await connection.query(sqlQuery, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio, clienteId]);
-
-        if (result.affectedRows > 0) {
-            res.status(200).json({ message: 'Cliente actualizado con éxito' });
-        } else {
-            res.status(404).json({ message: 'Cliente no encontrado' });
-        }
-    } catch (error) {
-        console.error('Error al actualizar el cliente:', error);
-        res.status(500).json({ message: 'Error del servidor' });
-    }
-});
-
-//////////////////////////////////////////////////////////////////////////////////
-
-app.get('/Producto', async (req, res) => {
+app.get('/Barrio/Cliente', async (req, res) => {
     const connection = await database.getConnection();
-    const resultado = await connection.query("SELECT * FROM tpsoderia.producto;");
+    const resultado = await connection.query(`
+        SELECT b.id_Barrio, b.nombreBarrio, COUNT(c.id_Cliente) AS cantidadDeClientes
+        FROM Barrio b
+        INNER JOIN Cliente c ON b.id_Barrio = c.id_Barrio
+        GROUP BY b.id_Barrio, b.nombreBarrio`);
     res.json(resultado);
 });
 
-app.get('/Producto/:id_Producto', async (req, res) => {
-    const { id_Cliente } = req.params;
 
-    try {
-        const connection = await database.getConnection();
-        const query = 'SELECT * FROM tpsoderia.cliente WHERE id_Cliente = ?';
-        const [resultado] = await connection.query(query, [id_Cliente]);
-
-        if (resultado.length > 0) {
-            res.json(resultado[0]); 
-        } else {
-            res.status(404).json({ message: 'Cliente no encontrado' });
-        }
-    } catch (error) {
-        console.error('Error al obtener el cliente:', error);
-        res.status(500).json({ error: 'Error al obtener el cliente' });
-    }
-});
-
-//Inserta un nuevo registro de cliente en la tabla cliente
-app.post('/Producto', async (req, res) => {
-    const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio } = req.body;
-
-    try {
-        const connection = await database.getConnection();
-        const query = 'INSERT INTO tpsoderia.cliente (nombre, apellido, telefono, direccion, numeroDocumento, id_Localidad, id_Barrio) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        const result = await connection.query(query, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio]);
-
-        res.status(200).json({ message: 'Cliente agregado con éxito', result });
-    } catch (error) {
-        console.error('Error al insertar el cliente:', error);
-        res.status(500).json({ error: 'Error al agregar el cliente' });
-    }
-});
-
-//Borra un registro de cliente en la tabla cliente
-app.delete('/Producto/:id_Producto', async (req, res) => {
-    const { id_Cliente } = req.params; 
-    console.log(id_Cliente); 
-
-    try {
-        const connection = await database.getConnection();
-        const query = 'DELETE FROM tpsoderia.cliente WHERE id_Cliente = ?';
-        
-        const [result] = await connection.query(query, [id_Cliente]);
-
-        if (result.affectedRows > 0) {
-            res.status(200).json({ success: true, message: 'Cliente eliminado con éxito' });
-        } else {
-            res.status(404).json({ success: false, message: 'Cliente no encontrado' });
-        }
-    } catch (error) {
-        console.error('Error al eliminar el cliente:', error);
-        res.status(500).json({ success: false, message: 'Error al eliminar el cliente' });
-    }
-});
-
-//Actualiza el registro de un cliente dependiendo de su ID
-app.put('/Producto/:id', async (req, res) => {
-    const clienteId = req.params.id;
-    const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio } = req.body;
-
-    const sqlQuery = `
-        UPDATE tpsoderia.cliente
-        SET nombre = ?, apellido = ?, telefono = ?, direccion = ?, numeroDocumento = ?, id_Localidad = ?, id_Barrio = ?
-        WHERE id_Cliente = ?`;
-
-    try {
-        const connection = await database.getConnection();
-        const result = await connection.query(sqlQuery, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio, clienteId]);
-
-        if (result.affectedRows > 0) {
-            res.status(200).json({ message: 'Cliente actualizado con éxito' });
-        } else {
-            res.status(404).json({ message: 'Cliente no encontrado' });
-        }
-    } catch (error) {
-        console.error('Error al actualizar el cliente:', error);
-        res.status(500).json({ message: 'Error del servidor' });
-    }
-});
-
-//////////////////////////////////////////////////////////////////////////////////
-
-app.get('/Recorrido', async (req, res) => {
-    const connection = await database.getConnection();
-    const resultado = await connection.query("SELECT * FROM tpsoderia.recorrido;");
-    res.json(resultado);
-});
-
-app.get('/Recorrido/:id_Recorrido', async (req, res) => {
-    const { id_Cliente } = req.params;
-
-    try {
-        const connection = await database.getConnection();
-        const query = 'SELECT * FROM tpsoderia.cliente WHERE id_Cliente = ?';
-        const [resultado] = await connection.query(query, [id_Cliente]);
-
-        if (resultado.length > 0) {
-            res.json(resultado[0]); 
-        } else {
-            res.status(404).json({ message: 'Cliente no encontrado' });
-        }
-    } catch (error) {
-        console.error('Error al obtener el cliente:', error);
-        res.status(500).json({ error: 'Error al obtener el cliente' });
-    }
-});
-
-//Inserta un nuevo registro de cliente en la tabla cliente
-app.post('/Recorrido', async (req, res) => {
-    const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio } = req.body;
-
-    try {
-        const connection = await database.getConnection();
-        const query = 'INSERT INTO tpsoderia.cliente (nombre, apellido, telefono, direccion, numeroDocumento, id_Localidad, id_Barrio) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        const result = await connection.query(query, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio]);
-
-        res.status(200).json({ message: 'Cliente agregado con éxito', result });
-    } catch (error) {
-        console.error('Error al insertar el cliente:', error);
-        res.status(500).json({ error: 'Error al agregar el cliente' });
-    }
-});
-
-//Borra un registro de cliente en la tabla cliente
-app.delete('/Recorrido/:id_Recorrido', async (req, res) => {
-    const { id_Cliente } = req.params; 
-    console.log(id_Cliente); 
-
-    try {
-        const connection = await database.getConnection();
-        const query = 'DELETE FROM tpsoderia.cliente WHERE id_Cliente = ?';
-        
-        const [result] = await connection.query(query, [id_Cliente]);
-
-        if (result.affectedRows > 0) {
-            res.status(200).json({ success: true, message: 'Cliente eliminado con éxito' });
-        } else {
-            res.status(404).json({ success: false, message: 'Cliente no encontrado' });
-        }
-    } catch (error) {
-        console.error('Error al eliminar el cliente:', error);
-        res.status(500).json({ success: false, message: 'Error al eliminar el cliente' });
-    }
-});
-
-//Actualiza el registro de un cliente dependiendo de su ID
-app.put('/Recorrido/:id', async (req, res) => {
-    const clienteId = req.params.id;
-    const { nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio } = req.body;
-
-    const sqlQuery = `
-        UPDATE tpsoderia.cliente
-        SET nombre = ?, apellido = ?, telefono = ?, direccion = ?, numeroDocumento = ?, id_Localidad = ?, id_Barrio = ?
-        WHERE id_Cliente = ?`;
-
-    try {
-        const connection = await database.getConnection();
-        const result = await connection.query(sqlQuery, [nombre, apellido, telefono, direccion, numeroDocumento, localidad, barrio, clienteId]);
-
-        if (result.affectedRows > 0) {
-            res.status(200).json({ message: 'Cliente actualizado con éxito' });
-        } else {
-            res.status(404).json({ message: 'Cliente no encontrado' });
-        }
-    } catch (error) {
-        console.error('Error al actualizar el cliente:', error);
-        res.status(500).json({ message: 'Error del servidor' });
-    }
-});
 

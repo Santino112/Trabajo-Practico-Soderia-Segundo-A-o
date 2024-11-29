@@ -34,15 +34,21 @@
                     <img class="img-fluid rounded contenedorImagen" src="/Frontend/Imagenes/Logo_Software.png" alt="Imagen de Nuestra Historia">
             </div>
             <div class="contenedorFormulario">
-                <form>
+                <form class="needs-validation" id="formularioValidacion"novalidate>
                     <p class="h2">Login Form</p>
                     <div class="mb-3">
-                        <label for="inputEmail3" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                        <label for="inputEmail3" class="form-label">Usuario</label>
+                        <input type="usuario" class="form-control" id="usuario" placeholder="Usuario" required>
+                        <div class="invalid-feedback">
+                            Debe ingresar un usuario.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="inputPassword3" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="inputPassword3" placeholder="Contraseña">
+                        <input type="password" class="form-control" id="password" placeholder="Contraseña" required>
+                        <div class="invalid-feedback">
+                            Debe ingresar una contraseña valida.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
@@ -50,12 +56,13 @@
                             <label class="form-check-label" for="gridRadios1">Recuérdame</label>
                         </div>
                     </div>
-                    <a href="./aplicacionAdministrador.html" class="btn btn-primary">Ingresar</a>
-                    <a href="./seccionNuevaContraseña.html" class="reseteo">¿Resetear Contraseña?</a>
+                    <button class="btn btn-primary" type="submit">Ingresar</button>
+                    <a class="reseteo">¿Resetear Contraseña?</a>
                 </form>
             </div>
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="/Frontend/JavaScript/login.js"></script>
 </body>
 </html>

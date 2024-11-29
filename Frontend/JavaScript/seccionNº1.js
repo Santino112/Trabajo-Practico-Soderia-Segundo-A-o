@@ -1,13 +1,13 @@
 import { getClientes } from "./Services/clientesServices.js";
 import { borrarContenidoInputs} from "./funciones.js";
 
-const columnas = ['ID', 'Nombre', 'Apellido', 'Telefono', 'Direccion', 'Dni', 'Localidad', 'Barrio'];
+const columnas = ['ID', 'Nombre', 'Apellido', 'Telefono', 'Direccion', 'Dni', 'Localidad', 'Barrio', 'Estado'];
 
 const tablaCliente = (clienteColumnas, datos = []) => {
     const cajaTabla = document.querySelector('.cajaTabla');
 
     let tabla = `  
-        <table class="table tabla table-striped table-dark table-borderless table-hover shadow-lg p-3">
+        <table class="table tabla table-striped table-dark table-borderless table-hover shadow-lg p-3" id="tablaClientes">
             <thead>
                 <tr>
     `;
@@ -29,6 +29,7 @@ const tablaCliente = (clienteColumnas, datos = []) => {
                 <td>${fila.numeroDocumento}</td>
                 <td>${fila.id_Localidad}</td>
                 <td>${fila.id_Barrio}</td>
+                <td>${fila.estado}</td>
                 <td>
                     <button type="button" class="btn btn-success btnActualizar" data-bs-toggle="modal" data-bs-target="#actualizarCliente" data-id="${fila.id_Cliente}">
                         <i class="fa-solid fa-pen"></i>
@@ -118,7 +119,25 @@ document.getElementById('clientes').addEventListener("click", async () => {
         </div>
         <div class="contenedor-flex">
             <div class="primeraCaja shadow-lg p-3 container">
-                <h2 class="h2 text-center">Clientes</h2>
+                <div class="contenedorEncabezado">
+                    <h2 class="h2">Listado de clientes</h2>
+                    <div class="input-group">
+                        <span class="input-group-text" id="inputGroup-sizing-default">
+                            <i class="bi bi-database-fill"></i>
+                        </span>
+                        <input type="text" class="form-control" id="filtroNombre" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Buscar por nombre">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text" id="inputGroup-sizing-default">
+                             <i class="bi bi-database-fill"></i>
+                        </span>
+                        <select class="form-select" aria-label="Default select example" id="filtroEstado">
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="b-example-divider"></div>
                 <div class="cajaTabla container table-responsive-sm table-responsive-vertical"></div>
             </div>
         </div>
@@ -153,7 +172,6 @@ document.getElementById('clientes').addEventListener("click", async () => {
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" aria-label="Default select example" id="localidad">
-                                    <option selected></option>
                                     <option value="1">Villa María</option>
                                     <option value="2">Villa Nueva</option>
                                 </select>
@@ -161,13 +179,17 @@ document.getElementById('clientes').addEventListener("click", async () => {
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" aria-label="Default select example" id="barrio">
-                                    <option selected></option>
-                                    <option value="1">San Juan Bautista</option>
-                                    <option value="2">San Justo</option>
-                                    <option value="3">Rivadavia</option>
-                                    <option value="4">Industrial</option>
+                                    <option value="1">Barrio Centro</option>
+                                    <option value="2">Barrio Mariano Moreno</option>
+                                    <option value="3">Barrio Ameghino</option>
+                                    <option value="4">Barrio San Juan Bautista</option>
+                                    <option value="5">Barrio Palermo</option>
                                 </select>
                                 <label for="barrio">Seleccione el barrio</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" id="estado" class="form-control input" placeholder="Estado del cliente">
+                                <label for="estado">Estado del cliente</label>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -217,13 +239,17 @@ document.getElementById('clientes').addEventListener("click", async () => {
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" aria-label="Default select example" id="barrioActualizar">
-                                    <option selected></option>
-                                    <option value="1">San Juan Bautista</option>
-                                    <option value="2">San Justo</option>
-                                    <option value="3">Rivadavia</option>
-                                    <option value="4">Industrial</option>
+                                    <option value="1">Barrio Centro</option>
+                                    <option value="2">Barrio Mariano Moreno</option>
+                                    <option value="3">Barrio Ameghino</option>
+                                    <option value="4">Barrio San Juan Bautista</option>
+                                    <option value="5">Barrio Palermo</option>
                                 </select>
                                 <label for="barrioActualizar">Seleccione el barrio</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" id="estadoActualizar" class="form-control input" placeholder="Estado del cliente">
+                                <label for="estadoActualizar">Estado del cliente</label>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -273,6 +299,7 @@ document.getElementById('clientes').addEventListener("click", async () => {
         const numeroDocumento = document.getElementById('numeroDocumento').value;
         const localidad = document.getElementById('localidad').value;
         const barrio = document.getElementById('barrio').value;
+        const estado = document.getElementById('estado').value;
     
         const nuevoCliente = {
             nombre: nombre,
@@ -282,6 +309,7 @@ document.getElementById('clientes').addEventListener("click", async () => {
             numeroDocumento: numeroDocumento,
             localidad: localidad,
             barrio: barrio,
+            estado: estado
         };
     
         try {
@@ -294,7 +322,9 @@ document.getElementById('clientes').addEventListener("click", async () => {
             });
             if (response.ok) {
                 alert('Cliente agregado con éxito');
-                await cargarClientes();
+                const modalActualizar = bootstrap.Modal.getInstance(document.getElementById('agregarCliente'));
+                modalActualizar.hide();
+                await getClientes();
             } else {
                 alert('Hubo un error al agregar el cliente');
             }
@@ -307,7 +337,7 @@ document.getElementById('clientes').addEventListener("click", async () => {
     document.getElementById('actualizarCliente').addEventListener('submit', async function (event) {
         event.preventDefault();
     
-        const id = document.getElementById('actualizarCliente').getAttribute('data-id');
+        const id_Cliente = document.getElementById('actualizarCliente').getAttribute('data-id');
         
         const nombre = document.getElementById('nombreActualizar').value;
         const apellido = document.getElementById('apellidoActualizar').value;
@@ -316,6 +346,7 @@ document.getElementById('clientes').addEventListener("click", async () => {
         const numeroDocumento = document.getElementById('numeroDocumentoActualizar').value;
         const localidad = document.getElementById('localidadActualizar').value;
         const barrio = document.getElementById('barrioActualizar').value;
+        const estado = document.getElementById('estadoActualizar').value;
     
         const clienteActualizado = {
             nombre: nombre,
@@ -324,11 +355,12 @@ document.getElementById('clientes').addEventListener("click", async () => {
             direccion: direccion,
             numeroDocumento: numeroDocumento,
             localidad: localidad,
-            barrio: barrio
+            barrio: barrio,
+            estado: estado
         };
     
         try {
-            const response = await fetch(`http://127.0.0.1:4000/Cliente/${id}`, {
+            const response = await fetch(`http://127.0.0.1:4000/Cliente/${id_Cliente}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -340,9 +372,9 @@ document.getElementById('clientes').addEventListener("click", async () => {
     
             if (result.success) {
                 alert('Cliente actualizado con éxito');
-                await cargarClientes();  // Actualizar la tabla
                 const modalActualizar = bootstrap.Modal.getInstance(document.getElementById('actualizarCliente'));
-                modalActualizar.hide();  // Cerrar el modal
+                modalActualizar.hide();
+                await getClientes();
             } else {
                 alert('Error al actualizar el cliente');
             }
@@ -351,5 +383,26 @@ document.getElementById('clientes').addEventListener("click", async () => {
         }
     });
 
+    function filtrarTabla() {
+        const input = document.getElementById('filtroNombre').value.toLowerCase(); 
+        const filtroEstado = document.getElementById('filtroEstado').value.toLowerCase(); 
+        const filas = document.querySelectorAll('#tablaClientes tbody tr');
+        filas.forEach(fila => {
+          const nombre = fila.cells[1].textContent.toLowerCase();
+          const estado = fila.cells[8].textContent.toLowerCase();
+          const coincideNombre = input === '' || nombre.includes(input);
+          const coincideEstado = filtroEstado === 'todos' || estado === filtroEstado;
+    
+          if (coincideNombre && coincideEstado) {
+            fila.style.display = ''; 
+          } else {
+            fila.style.display = 'none'; 
+          }
+        });
+      }
+      
+    document.getElementById('filtroNombre').addEventListener('input', filtrarTabla);
+    document.getElementById('filtroEstado').addEventListener('change', filtrarTabla);
+      
     borrarContenidoInputs();
 });
