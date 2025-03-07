@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación de administrador</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/Frontend/CSS/Barrio.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+    <main>
+        <div class="todo">
+            <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary sideBar text-bg-dark" id="">
+                <a href="/"
+                    class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                    <svg class="bi pe-none me-2" width="40" height="32"></svg>
+                    <span class="fs-4">EffiBubbly</span>
+                </a>
+                <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="/Frontend/HTML/aplicacionAdministrador2.html" class="nav-link link-body-emphasis">
+                            <i class="fa-solid fa-house iconosMenu"></i>
+                            <svg class="bi pe-none me-2" width="17" height="16">
+                            </svg>
+                            Inicio
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Frontend/HTML/Clientes.html" class="nav-link link-body-emphasis">
+                            <i class="fa-solid fa-users iconosMenu"></i>
+                            <svg class="bi pe-none me-2" width="17" height="16">
+                            </svg>
+                            Clientes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Frontend/HTML/Pedidos.html" class="nav-link link-body-emphasis">
+                            <i class="fa-solid fa-box-open iconosMenu"></i>
+                            <svg class="bi pe-none me-2" width="17" height="16">
+                            </svg>
+                            Pedidos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Frontend/HTML/Barrio.html" class="nav-link">
+                            <i class="fa-solid fa-location-dot iconosMenu"></i>
+                            <svg class="bi pe-none me-2" width="17" height="16">
+                            </svg>
+                            Barrios
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link link-body-emphasis" type="button" data-bs-toggle="modal"
+                            data-bs-target="#seccionSinServicio">
+                            <i class="fa-solid fa-warehouse iconosMenu"></i>
+                            <svg class="bi pe-none me-2" width="17" height="16">
+                            </svg>
+                            Inventario
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link link-body-emphasis" type="button" data-bs-toggle="modal"
+                            data-bs-target="#seccionSinServicio">
+                            <i class="fa-solid fa-route iconosMenu"></i>
+                            <svg class="bi pe-none me-2" width="17" height="16">
+                            </svg>
+                            Rutas de entrega
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="dropdown">
+                    <a href="#"
+                        class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                        <strong>Usuario</strong>
+                    </a>
+                    <ul class="dropdown-menu text-small shadow">
+                        <li><a class="dropdown-item" href="#">Nuevo proyecto</a></li>
+                        <li><a class="dropdown-item" href="#">Configuración</a></li>
+                        <li><a class="dropdown-item" href="#">Perfíl</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item cerrarSesion" data-bs-toggle="modal"
+                                data-bs-target="#logoutModal">Cerrar Sesión</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="container-fluid contenedorPrincipal">
+                <div class="divInicio container-fluid">
+                    <div class="contenedorTitulo container-fluid">
+                        <div>
+                            <h1 class="titulo">Barrios</h1>
+                        </div>
+                    </div>
+                    <div class="container contenedorDelColapse">
+                        <p>
+                            <button class="btn botonColapse" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseWidthExample" aria-expanded="false"
+                                aria-controls="collapseWidthExample">
+                                Numero total de clientes
+                            </button>
+                        </p>
+                        <div style="min-height: 50px;">
+                            <div class="collapse collapse-horizontal" id="collapseWidthExample">
+                                <div class="card card-body" style="width: 300px;">
+                                    <span id="collapseText">La cantidad total de clientes es: 0</span>  <!-- Aquí se mostrará el total de clientes -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>                                   
+                    <div class="contenedorTabla shadow rounded">
+                        <div class="cajaTituloListaUsuarios container-fluid">
+                            <i class="fa-solid fa-building iconoCliente"></i>
+                            <h1 class="listaClientes">Clientes por barrios</h1>
+                            <div class="input-group buscarPorNombre">
+                                <span class="input-group-text" id="inputGroup-sizing-default">
+                                    <i class="bi bi-database-fill"></i>
+                                </span>
+                                <select class="form-select" aria-label="Default select example" id="filtroBarrio">
+                                    <option selected>Seleccione un barrio</option>
+                                </select>
+                            </div>
+                        </div>
+                        <table class="table tabla table-striped table-dark table-borderless table-hover shadow-lg p-3"
+                            id="tablaBarrio">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Nombre del barrio</th>
+                                    <th scope="col">Cantidad total por barrio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="modal fade" id="seccionSinServicio" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal1">
+                <div class="modal-body">
+                    Esta sección no se encuentra disponible.
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn botones cancelar" data-bs-dismiss="modal">Cerrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered"">
+            <div class=" modal-content modal1">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Confirmar cierre de sesión</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que quieres cerrar sesión?
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn botones cancelar" data-bs-dismiss="modal">Cancelar</a>
+                <a type="button" class="btn botonCierreSesion" href="/Frontend/HTML/seccionLogin.html">Cerrar sesión</a>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="/Frontend/JavaScript/seccionN°3.js" type="module"></script>
+</body>
+
+</html>

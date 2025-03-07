@@ -1,0 +1,204 @@
+*,::after,::before{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body,html{
+    height: 100vh;
+    width: 100%;
+}
+
+.sideBar{
+    position: fixed;
+    top: -0.1vh;
+    left: 0;
+    width: 300px;
+    height: 100vh;
+}
+
+.text-bg-dark{
+    background-color: rgb( 33, 37, 41);
+}
+
+.nav-link{
+    margin: 1.5vh;
+    font-size: 1.2rem;
+};
+
+.botonCierreSesion{
+    color: #06052c;
+    background-color: #ffffff;
+}
+
+.botonCierreSesion:hover{
+    color: #06052c;
+    background-color:#d1d0d0;
+}
+
+.todo{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.contenedorPrincipal{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-left: 300px;
+    background: rgba(6,12,64,1);
+}
+
+.divInicio{
+    position: relative;
+    right: 1.2vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(6,12,64,1);
+}
+
+.contenedorTitulo{
+    position: relative;
+    right: 1.3vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 7.2vh;
+    background: rgb(194,92,29);
+    background: linear-gradient(70deg, rgba(194,92,29,1) 0%, rgba(6,12,64,1) 65%);
+}
+
+.tituloAgregarCliente{
+    margin-bottom: 2.5vh;
+    font-size: 3.5vh;
+}
+
+.contenedorAgregarUsuario{
+    padding: 3vh;
+    position: relative;
+    right: 1.2vh;
+    width: 70%;
+    margin-top: 4vh;
+    align-items: center;
+    background-color: #06052c;
+}
+
+.cajaTituloAgregarUsuario{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    right: 1vh;
+    height: 7vh;
+}
+
+.iconoCliente{
+    font-size: 4.5vh;
+    margin-right: 1vh;
+}
+
+.contenedorTabla{
+    padding: 3vh;
+    position: relative;
+    right: 1.2vh;
+    width: 70%;
+    margin-top: 4vh;
+    align-items: center;
+    background-color: #06052c;
+    padding-bottom: 3vh;
+    margin-bottom: 5vh;
+}
+
+.btn{
+    width: 20%;
+    margin-top: 1vh;
+}
+
+.cajaTituloListaUsuarios{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    right: 1vh;
+    height: 7vh;
+}
+
+.cajaListaPedidosBaja{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    right: 1vh;
+    height: 7vh;
+}
+
+.btn{
+    width: 25%;
+    margin-top: 1vh;
+}
+
+.listaPedidos{
+    font-size: 3.5vh;
+    width: 50%;
+    margin-right: 2vh;
+}
+
+.buscarPorNombre{
+    margin-left: 5vh;
+    width: 30%;
+    height: auto;
+}
+
+table{
+    margin-top: 2vh;
+}
+
+.iconosMenu{
+    position: relative;
+    top: -0.2vh;
+    left: 2.7vh;
+}
+
+.tabla{
+    margin: auto;
+    margin-top: 4vh;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.table-responsive-vertical {
+    max-height: 300px; 
+    overflow-y: auto;
+}
+
+.btnActualizar{
+    width: 45%;
+    text-align: center;
+    align-items: center;
+}
+
+.btnDarBaja{
+    width: 45%;
+    text-align: center;
+    align-items: center;
+}
+
+.fa-user-slash{
+    position: relative;
+    right: 0.5vh;
+}
+
+.btnRestaurarPedido{
+    width: 45%;
+    text-align: center;
+    align-items: center;
+}
+
+.fa-people-carry-box{
+    position: relative;
+    right: 0.4vh;
+}

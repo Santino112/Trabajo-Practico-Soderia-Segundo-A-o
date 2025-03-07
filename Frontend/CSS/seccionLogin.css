@@ -107,6 +107,7 @@ main {
 form {
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
 }
 
 /* Ajustes en elementos del formulario */

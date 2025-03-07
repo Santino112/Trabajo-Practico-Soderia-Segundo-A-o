@@ -13,9 +13,6 @@
     <main>
       <nav class="navbar navbar-light fixed-top justify-content-between py-0" style="background-color: #141313">
         <div class="container-fluid d-flex align-items-center">
-            <a class="btn btn-lg iconoPrincipal me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-                <i class="bi bi-list"></i> <span class="d-none d-sm-inline">Menú</span>
-            </a>
             <form class="d-flex flex-grow-1 align-items-center justify-content-end">
                 <input class="form-control me-2 custom-input-width" type="search" placeholder="Buscar" aria-label="Search">
                 <button class="btn botonNav my-2 my-sm-0 botones" type="submit">Buscar</button>
@@ -31,34 +28,58 @@
                 </blockquote>
           </div>
       </div>
-      <div class="offcanvas offcanvas-start menu" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Menú</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
+      <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px;" id="">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+          <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+          <span class="fs-4">Sidebar</span>
+        </a>
         <hr>
-        <div class="offcanvas-body">
-            <a class="btn botones" id="inicio">Inicio</a>
-            <a class="btn botones" id="clientes">Clientes</a>
-            <a class="btn botones" id="pedidos">Pedidos</a>
-            <a class="btn botones" id="barrios">Barrios</a>
-            <a class="btn botones" type="button" data-bs-toggle="modal" data-bs-target="#seccionSinServicio">Inventario</a>
-            <a class="btn botones" type="button" data-bs-toggle="modal" data-bs-target="#seccionSinServicio">Rutas de entrega</a>
-            <div class="contenedorBotones">
-                  <div class="dropdown">
-                    <a class="btn btn-lg icono botones" type="button" aria-controls="offcanvasWithBothOptions" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-gear iconoDeMenu"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="configDropdown">
-                        <li><a class="dropdown-item" href="#">Perfil de usuario</a></li>
-                        <li><a class="dropdown-item" href="#">Configuración del sistema</a></li>
-                    </ul>
-                  </div>
-                  <a class="btn btn-lg icono botones" type="button" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                      <i class="fa-solid fa-right-from-bracket iconoDeMenu"></i>
-                  </a>
-            </div>
-          </div>
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li class="nav-item">
+            <a href="#" class="nav-link active" aria-current="page">
+              <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link link-body-emphasis">
+              <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link link-body-emphasis">
+              <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
+              Orders
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link link-body-emphasis">
+              <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
+              Products
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link link-body-emphasis">
+              <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
+              Customers
+            </a>
+          </li>
+        </ul>
+        <hr>
+        <div class="dropdown">
+          <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+            <strong>mdo</strong>
+          </a>
+          <ul class="dropdown-menu text-small shadow">
+            <li><a class="dropdown-item" href="#">Nueva sección</a></li>
+            <li><a class="dropdown-item" href="#">Configuración</a></li>
+            <li><a class="dropdown-item" href="#">Perfíl</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Sign out</a></li>
+          </ul>
+        </div>
       </div>
     </main>
     <div class="modal fade" id="seccionSinServicio" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">

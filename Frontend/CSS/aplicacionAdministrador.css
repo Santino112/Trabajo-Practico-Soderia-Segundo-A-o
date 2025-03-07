@@ -59,8 +59,8 @@ hr{
 }
 
 .contenedorPrincipal{
-    width: auto;
-    min-width: auto;
+    width: 300vh;
+    min-width: 300vh;
     min-height: auto;
 }
 

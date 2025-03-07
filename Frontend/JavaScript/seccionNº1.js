@@ -1,408 +1,570 @@
 import { getClientes } from "./Services/clientesServices.js";
-import { borrarContenidoInputs} from "./funciones.js";
 
-const columnas = ['ID', 'Nombre', 'Apellido', 'Telefono', 'Direccion', 'Dni', 'Localidad', 'Barrio', 'Estado'];
-
-const tablaCliente = (clienteColumnas, datos = []) => {
-    const cajaTabla = document.querySelector('.cajaTabla');
-
-    let tabla = `  
-        <table class="table tabla table-striped table-dark table-borderless table-hover shadow-lg p-3" id="tablaClientes">
-            <thead>
-                <tr>
-    `;
-
-    clienteColumnas.forEach(clienteColumnas => {
-        tabla += `<th>${clienteColumnas}</th>`;
-    });
-
-    tabla += `<th>Acciones</th></tr></thead><tbody>`; 
-
-    datos.forEach(fila => {
-        tabla += `
-            <tr>
-                <td>${fila.id_Cliente}</td>
-                <td>${fila.nombre}</td>
-                <td>${fila.apellido}</td>
-                <td>${fila.telefono}</td>
-                <td>${fila.direccion}</td>
-                <td>${fila.numeroDocumento}</td>
-                <td>${fila.id_Localidad}</td>
-                <td>${fila.id_Barrio}</td>
-                <td>${fila.estado}</td>
-                <td>
-                    <button type="button" class="btn btn-success btnActualizar" data-bs-toggle="modal" data-bs-target="#actualizarCliente" data-id="${fila.id_Cliente}">
-                        <i class="fa-solid fa-pen"></i>
-                    </button>
-                    <button type="button" class="btn btn-danger btnBorrar" data-id="${fila.id_Cliente}">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        `;
-    });
-
-    tabla += `</tbody></table>`;
-
-    cajaTabla.innerHTML = tabla;
-
-    document.querySelectorAll('.btnBorrar').forEach(boton => {
-        boton.addEventListener('click', async (e) => {
-            const id = e.currentTarget.getAttribute('data-id'); 
-            if (confirm(`¿Estás seguro de que deseas eliminar el cliente con ID: ${id}?`)) {
-                try {
-                    const response = await fetch(`http://127.0.0.1:4000/Cliente/${id}`, {
-                        method: 'DELETE',
-                    });
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        alert('Cliente eliminado con éxito');
-                        await cargarClientes();
-                    } else {
-                        alert('Error al eliminar el cliente');
-                    }
-                } catch (error) {
-                    console.error('Error al eliminar el cliente:', error);
-                }
-            }
-        });
-        getClientes();
-    });
-
-    document.querySelectorAll('.btnActualizar').forEach(boton => {
-        boton.addEventListener('click', async (e) => {
-            const id = e.currentTarget.getAttribute('data-id');  // Obtener el ID del cliente
-            
-            // Obtener los datos del cliente para mostrar en el modal de actualización
+document.querySelectorAll('.btnBorrar').forEach(boton => {
+    boton.addEventListener('click', async (e) => {
+        const id = e.currentTarget.getAttribute('data-id');
+        if (confirm(`¿Estás seguro de que deseas eliminar el cliente con ID: ${id}?`)) {
             try {
-                const response = await fetch(`http://127.0.0.1:4000/Cliente/${id}`);
-                const cliente = await response.json();
-    
-                // Llenar los campos del modal con los datos del cliente
-                document.getElementById('nombreActualizar').value = cliente.nombre;
-                document.getElementById('apellidoActualizar').value = cliente.apellido;
-                document.getElementById('telefonoActualizar').value = cliente.telefono;
-                document.getElementById('direccionActualizar').value = cliente.direccion;
-                document.getElementById('numeroDocumentoActualizar').value = cliente.numeroDocumento;
-                document.getElementById('localidadActualizar').value = cliente.id_Localidad;
-                document.getElementById('barrioActualizar').value = cliente.id_Barrio;
-    
-                // Guardar el ID del cliente para usarlo al modificar
-                document.getElementById('actualizarCliente').setAttribute('data-id', id);
-    
+                const response = await fetch(`http://127.0.0.1:4000/Cliente/${id}`, {
+                    method: 'DELETE',
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Cliente eliminado con éxito');
+                    await cargarClientes();
+                } else {
+                    alert('Error al eliminar el cliente');
+                }
             } catch (error) {
-                console.error('Error al obtener los datos del cliente:', error);
+                console.error('Error al eliminar el cliente:', error);
             }
-        });
+        }
     });
-};
+});
 
-document.getElementById('clientes').addEventListener("click", async () => {
-    console.log('Botón presionado');
-    contenedorPrincipal.innerHTML = `
-        <div class="contenedorTitulo container-fluid">
-            <div>
-                <h1 class="titulo">Clientes</h1>
-            </div>
-            <div class="me-3 contenedorAgregarCosas">
-                <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Disabled popover" data-bs-placement="bottom">
-                    <button class="btn btn-secondary" type="button">
-                        <i class="fa-solid fa-clock"></i>
-                    </button>
-                </span>
-                <a class="btn btn-secondary agregarCliente" type="button" data-bs-toggle="modal" data-bs-target="#agregarCliente">
-                    <i class="fa-solid fa-user"></i>
-                    <i class="fa-solid fa-plus"></i>
-                </a>
-            </div>
-        </div>
-        <div class="contenedor-flex">
-            <div class="primeraCaja shadow-lg p-3 container">
-                <div class="contenedorEncabezado">
-                    <h2 class="h2">Listado de clientes</h2>
-                    <div class="input-group">
-                        <span class="input-group-text" id="inputGroup-sizing-default">
-                            <i class="bi bi-database-fill"></i>
-                        </span>
-                        <input type="text" class="form-control" id="filtroNombre" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Buscar por nombre">
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-text" id="inputGroup-sizing-default">
-                             <i class="bi bi-database-fill"></i>
-                        </span>
-                        <select class="form-select" aria-label="Default select example" id="filtroEstado">
-                            <option value="Activo">Activo</option>
-                            <option value="Inactivo">Inactivo</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="b-example-divider"></div>
-                <div class="cajaTabla container table-responsive-sm table-responsive-vertical"></div>
-            </div>
-        </div>
-        <div class="modal" data-bs-theme="dark" id="agregarCliente" tabindex="-1">
-            <div class="modal-md modal-dialog modal-dialog-centered">
-                <div class="modal-content modal2">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Agregar nuevo cliente</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form id="formAgregarCliente">
-                        <div class="modal-body">
-                            <div class="form-floating mb-3">
-                                <input type="text" id="nombre" class="form-control input" placeholder="Nombre">
-                                <label for="nombre">Nombre</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" id="apellido" class="form-control input" placeholder="Apellido">
-                                <label for="apellido">Apellido</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="number" id="telefono" class="form-control input" placeholder="Teléfono">
-                                <label for="telefono">Teléfono</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" id="direccion" class="form-control input" placeholder="Dirección">
-                                <label for="direccion">Dirección</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="number" id="numeroDocumento" class="form-control input" placeholder="D.N.I.">
-                                <label for="numeroDocumento">D.N.I.</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <select class="form-select" aria-label="Default select example" id="localidad">
-                                    <option value="1">Villa María</option>
-                                    <option value="2">Villa Nueva</option>
-                                </select>
-                                <label for="localidad">Seleccione la localidad</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <select class="form-select" aria-label="Default select example" id="barrio">
-                                    <option value="1">Barrio Centro</option>
-                                    <option value="2">Barrio Mariano Moreno</option>
-                                    <option value="3">Barrio Ameghino</option>
-                                    <option value="4">Barrio San Juan Bautista</option>
-                                    <option value="5">Barrio Palermo</option>
-                                </select>
-                                <label for="barrio">Seleccione el barrio</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" id="estado" class="form-control input" placeholder="Estado del cliente">
-                                <label for="estado">Estado del cliente</label>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" id="cerrar" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Agregar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="modal" data-bs-theme="dark" id="actualizarCliente" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content modal2">
-                    <form>
-                        <div class="modal-header">
-                            <h5 class="modal-title">Modificar datos del cliente</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-floating mb-3">
-                                <input type="text" id="nombreActualizar" class="form-control input" placeholder="Nombre">
-                                <label for="nombreActualizar">Nombre</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" id="apellidoActualizar" class="form-control input" placeholder="Apellido">
-                                <label for="apellidoActualizar">Apellido</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="number" id="telefonoActualizar" class="form-control input" placeholder="Teléfono">
-                                <label for="telefonoActualizar">Teléfono</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" id="direccionActualizar" class="form-control input" placeholder="Dirección">
-                                <label for="direccionActualizar">Dirección</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="number" id="numeroDocumentoActualizar" class="form-control input" placeholder="D.N.I.">
-                                <label for="numeroDocumentoActualizar">D.N.I.</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <select class="form-select" aria-label="Default select example" id="localidadActualizar">
-                                    <option selected></option>
-                                    <option value="1">Villa María</option>
-                                    <option value="2">Villa Nueva</option>
-                                </select>
-                                <label for="localidadActualizar">Seleccione la localidad</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <select class="form-select" aria-label="Default select example" id="barrioActualizar">
-                                    <option value="1">Barrio Centro</option>
-                                    <option value="2">Barrio Mariano Moreno</option>
-                                    <option value="3">Barrio Ameghino</option>
-                                    <option value="4">Barrio San Juan Bautista</option>
-                                    <option value="5">Barrio Palermo</option>
-                                </select>
-                                <label for="barrioActualizar">Seleccione el barrio</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" id="estadoActualizar" class="form-control input" placeholder="Estado del cliente">
-                                <label for="estadoActualizar">Estado del cliente</label>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" id="cerrar" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Modificar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="modal" id="darDeBajaACliente" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content modal1">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Deshabilitar cliente</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        ¿Estás seguro que deseas borrar este registro?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary">Aceptar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
+// Función que se ejecuta al cargar la página para obtener todos los clientes
 
-    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 
-    try {
-        const datosClientes = await getClientes();
-        tablaCliente(columnas, datosClientes);
-    } catch (error) {
-        console.error('Error al obtener los datos de clientes:', error);
+// Llamada a la función getClientes e inserción de datos en la tabla
+document.addEventListener("DOMContentLoaded", function () {
+    // Obtener los elementos de filtro
+    const filtroNombre = document.getElementById("filtroNombre");
+    const filtroEstado = document.getElementById("filtroEstado");
+
+    // Función para obtener clientes filtrados
+    async function obtenerClientesFiltrados() {
+        const nombre = filtroNombre.value.trim();  // Obtener el valor del filtro de nombre
+        const estado = filtroEstado.value;         // Obtener el valor del filtro de estado
+
+        // Solo agregar el parámetro de estado si el select tiene un valor diferente a "Estado"
+        const url = new URL("/Cliente", "http://localhost:4000");
+
+        const params = new URLSearchParams();
+
+        // Si el nombre no está vacío, agregarlo como filtro
+        if (nombre) {
+            params.append("nombre", nombre);
+        }
+
+        // Si el estado es "Activo" o "Inactivo", agregarlo como filtro
+        if (estado && estado !== "Estado") {
+            params.append("estado", estado);
+        }
+
+        // Asignar los parámetros a la URL
+        url.search = params.toString();
+
+        console.log("URL solicitada: ", url.toString()); // Verifica la URL completa
+
+        try {
+            // Obtener los datos filtrados desde el servidor
+            const response = await fetch(url);
+            if (!response.ok) {
+                console.error("Error al obtener datos:", response.statusText);
+                return;
+            }
+
+            const clientes = await response.json();  // Convertir la respuesta en JSON
+            console.log("Clientes obtenidos:", clientes);
+
+            // Mostrar los clientes en la tabla
+            mostrarClientes(clientes);
+        } catch (error) {
+            console.error("Error al obtener los clientes:", error);
+        }
     }
 
-    document.getElementById('formAgregarCliente').addEventListener('submit', async function (event) {
-        event.preventDefault();
-    
-        const nombre = document.getElementById('nombre').value;
-        const apellido = document.getElementById('apellido').value;
-        const telefono = document.getElementById('telefono').value;
-        const direccion = document.getElementById('direccion').value;
-        const numeroDocumento = document.getElementById('numeroDocumento').value;
-        const localidad = document.getElementById('localidad').value;
-        const barrio = document.getElementById('barrio').value;
-        const estado = document.getElementById('estado').value;
-    
-        const nuevoCliente = {
-            nombre: nombre,
-            apellido: apellido,
-            telefono: telefono,
-            direccion: direccion,
-            numeroDocumento: numeroDocumento,
-            localidad: localidad,
-            barrio: barrio,
-            estado: estado
-        };
-    
-        try {
-            const response = await fetch('http://localhost:4000/Cliente', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(nuevoCliente) 
-            });
-            if (response.ok) {
-                alert('Cliente agregado con éxito');
-                const modalActualizar = bootstrap.Modal.getInstance(document.getElementById('agregarCliente'));
-                modalActualizar.hide();
-                await getClientes();
-            } else {
-                alert('Hubo un error al agregar el cliente');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-        getClientes();
-    });
+    // Función para mostrar los clientes en la tabla
+    async function mostrarClientes(clientes) {
+        const tablaClientesBody = document.querySelector('#tablaClientes tbody');
+        tablaClientesBody.innerHTML = '';  // Limpiar cualquier contenido previo en la tabla
 
-    document.getElementById('actualizarCliente').addEventListener('submit', async function (event) {
-        event.preventDefault();
-    
-        const id_Cliente = document.getElementById('actualizarCliente').getAttribute('data-id');
-        
-        const nombre = document.getElementById('nombreActualizar').value;
-        const apellido = document.getElementById('apellidoActualizar').value;
-        const telefono = document.getElementById('telefonoActualizar').value;
-        const direccion = document.getElementById('direccionActualizar').value;
-        const numeroDocumento = document.getElementById('numeroDocumentoActualizar').value;
-        const localidad = document.getElementById('localidadActualizar').value;
-        const barrio = document.getElementById('barrioActualizar').value;
-        const estado = document.getElementById('estadoActualizar').value;
-    
-        const clienteActualizado = {
-            nombre: nombre,
-            apellido: apellido,
-            telefono: telefono,
-            direccion: direccion,
-            numeroDocumento: numeroDocumento,
-            localidad: localidad,
-            barrio: barrio,
-            estado: estado
-        };
-    
-        try {
-            const response = await fetch(`http://127.0.0.1:4000/Cliente/${id_Cliente}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(clienteActualizado),
-            });
-    
-            const result = await response.json();
-    
-            if (result.success) {
-                alert('Cliente actualizado con éxito');
-                const modalActualizar = bootstrap.Modal.getInstance(document.getElementById('actualizarCliente'));
-                modalActualizar.hide();
-                await getClientes();
-            } else {
-                alert('Error al actualizar el cliente');
-            }
-        } catch (error) {
-            console.error('Error al actualizar el cliente:', error);
-        }
-    });
+        clientes.forEach(cliente => {
+            const row = document.createElement('tr'); // Crear una fila para cada cliente
 
-    function filtrarTabla() {
-        const input = document.getElementById('filtroNombre').value.toLowerCase(); 
-        const filtroEstado = document.getElementById('filtroEstado').value.toLowerCase(); 
-        const filas = document.querySelectorAll('#tablaClientes tbody tr');
-        filas.forEach(fila => {
-          const nombre = fila.cells[1].textContent.toLowerCase();
-          const estado = fila.cells[8].textContent.toLowerCase();
-          const coincideNombre = input === '' || nombre.includes(input);
-          const coincideEstado = filtroEstado === 'todos' || estado === filtroEstado;
-    
-          if (coincideNombre && coincideEstado) {
-            fila.style.display = ''; 
-          } else {
-            fila.style.display = 'none'; 
-          }
+            // Usar plantillas literales para crear las celdas de manera más limpia
+            row.innerHTML = `
+                <td>${cliente.id_Cliente}</td>
+                <td>${cliente.nombre}</td>
+                <td>${cliente.apellido}</td>
+                <td>${cliente.telefono}</td>
+                <td>${cliente.direccion}</td>
+                <td>${cliente.numeroDocumento}</td>
+                <td>${cliente.nombreLocalidad}</td>
+                <td>${cliente.nombreBarrio}</td>
+                <td>${cliente.estado}</td>
+                <td>
+                    <button type="button" class="btn btn-success btnActualizar" data-bs-toggle="modal" data-bs-target="#actualizarCliente" data-id="${cliente.id_Cliente}">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                     <button type="button" class="btn btn-danger btnDarBaja" data-bs-toggle="modal" data-bs-target="#darDeBajaCliente" data-id="${cliente.id_Cliente}">
+                        <i class="fa-solid fa-user-slash"></i>
+                    </button>
+                </td>
+            `;
+
+            // Añadir la fila al cuerpo de la tabla
+            tablaClientesBody.appendChild(row);
         });
-      }
-      
-    document.getElementById('filtroNombre').addEventListener('input', filtrarTabla);
-    document.getElementById('filtroEstado').addEventListener('change', filtrarTabla);
-      
-    borrarContenidoInputs();
+    }
+
+    // Escuchar cambios en los filtros
+    filtroNombre.addEventListener('input', obtenerClientesFiltrados);
+    filtroEstado.addEventListener('change', obtenerClientesFiltrados);
+
+    // Llamar a obtenerClientesFiltrados cuando la página cargue por primera vez
+    window.addEventListener('load', obtenerClientesFiltrados);
 });
+
+// Llamada para agregar un cliente
+document.getElementById('formAgregarCliente').addEventListener('submit', async function (event) {
+    event.preventDefault();  // Prevenir el comportamiento por defecto del formulario
+
+    const nombre = document.getElementById('nombre').value;
+    const apellido = document.getElementById('apellido').value;
+    const telefono = document.getElementById('telefono').value;
+    const direccion = document.getElementById('direccion').value;
+    const numeroDocumento = document.getElementById('numeroDocumento').value;
+    const localidad = document.getElementById('localidad').value;
+    const barrio = document.getElementById('barrio').value;
+    const estado = document.getElementById('estado').value;
+
+    const nuevoCliente = {
+        nombre: nombre,
+        apellido: apellido,
+        telefono: telefono,
+        direccion: direccion,
+        numeroDocumento: numeroDocumento,
+        localidad: localidad,
+        barrio: barrio,
+        estado: estado
+    };
+
+    try {
+        const response = await fetch('http://localhost:4000/Cliente', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(nuevoCliente)
+        });
+
+        if (response.ok) {
+            const myModal = new bootstrap.Modal(document.getElementById('clienteAgregadoModal'));
+            myModal.show();
+            // Actualizar la tabla después de agregar el cliente
+            mostrarClientes();
+        } else {
+            const myModal = new bootstrap.Modal(document.getElementById('faltaDatos'));
+            myModal.show();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+
+document.getElementById('formAgregarCliente').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    let form = this;
+    let isValid = true;
+
+    // Validar cada campo del formulario
+    document.querySelectorAll('#formAgregarCliente input, #formAgregarCliente select').forEach(function (input) {
+        if (!input.checkValidity()) {
+            input.classList.add('is-invalid'); // Si no es válido, marca el campo como inválido
+            isValid = false;
+        } else {
+            input.classList.remove('is-invalid'); // Si es válido, lo marca como válido
+            input.classList.add('is-valid');
+        }
+    });
+
+    // Si todos los campos son válidos, proceder a enviar el formulario y limpiar
+    if (isValid) {
+        console.log("Formulario válido, listo para enviar.");
+
+        // Aquí puedes agregar la lógica para enviar el formulario, como enviar los datos al backend.
+
+        // Limpiar el formulario después de enviar
+        form.reset(); // Esto reseteará todos los campos a sus valores iniciales
+
+        // Si usas `select` y tienes opciones como `disabled` en la primera opción, puedes resetearlo explícitamente:
+        document.getElementById('estado').selectedIndex = 0;
+        document.getElementById('localidad').selectedIndex = 0;
+        document.getElementById('barrio').selectedIndex = 0;
+
+        // Limpiar la clase de validación
+        document.querySelectorAll('#formAgregarCliente input, #formAgregarCliente select').forEach(function (input) {
+            input.classList.remove('is-valid', 'is-invalid');
+        });
+
+        // Aquí puedes agregar una notificación o mostrar un modal de "Pedido agregado con éxito"
+    } else {
+        console.log("Formulario contiene errores.");
+    }
+});
+
+/* document.querySelectorAll('.btnActualizar').forEach(boton => {
+    boton.addEventListener('click', async (e) => {
+        const id = e.currentTarget.getAttribute('data-id'); // Obtener el ID del cliente
+        console.log("ID Cliente al hacer clic:", id); // Verifica que no sea null o vacío
+
+        if (id === null || id === "") {
+            console.error("No se pudo obtener el ID del cliente.");
+            return; // Si el ID es nulo o vacío, no continuar
+        }
+
+        // Obtener los datos del cliente para mostrar en el modal de actualización
+        try {
+            const response = await fetch(`http://127.0.0.1:4000/Cliente/${id}`);
+            const cliente = await response.json();
+
+            console.log("Cliente obtenido:", cliente); // Verifica que el cliente tenga los valores correctos
+
+            // Llenar los campos del modal con los datos del cliente
+            document.getElementById('nombreActualizar').value = cliente.nombre;
+            document.getElementById('apellidoActualizar').value = cliente.apellido;
+            document.getElementById('telefonoActualizar').value = cliente.telefono;
+            document.getElementById('direccionActualizar').value = cliente.direccion;
+            document.getElementById('numeroDocumentoActualizar').value = cliente.numeroDocumento;
+            document.getElementById('localidadActualizar').value = cliente.id_Localidad;
+            document.getElementById('barrioActualizar').value = cliente.id_Barrio;
+            document.getElementById('estadoActualizar').value = cliente.estado;
+
+            // Guardar el ID del cliente para usarlo al modificar
+            document.getElementById('formActualizarCliente').setAttribute('data-id', id); // Asegurarse de que el ID esté en el formulario
+
+        } catch (error) {
+            console.error('Error al obtener los datos del cliente:', error);
+        }
+    });
+});
+
+
+// Paso 2: Enviar los datos actualizados al backend y actualizar la fila en la tabla
+document.getElementById('formActualizarCliente').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const id_Cliente = document.getElementById('formActualizarCliente').getAttribute('data-id'); // Obtener el ID del cliente desde el formulario
+    console.log("ID del cliente a actualizar:", id_Cliente);  // Verifica que el ID se obtenga correctamente
+
+    if (id_Cliente === null || id_Cliente === "") {
+        console.error("El ID del cliente es nulo o vacío.");
+        return; // Si el ID no está disponible, no enviar la solicitud
+    }
+
+    const nombre = document.getElementById('nombreActualizar').value;
+    const apellido = document.getElementById('apellidoActualizar').value;
+    const telefono = document.getElementById('telefonoActualizar').value;
+    const direccion = document.getElementById('direccionActualizar').value;
+    const numeroDocumento = document.getElementById('numeroDocumentoActualizar').value;
+    const localidad = document.getElementById('localidadActualizar').value;
+    const barrio = document.getElementById('barrioActualizar').value;
+    const estado = document.getElementById('estadoActualizar').value;
+
+    const clienteActualizado = {
+        nombre: nombre,
+        apellido: apellido,
+        telefono: telefono,
+        direccion: direccion,
+        numeroDocumento: numeroDocumento,
+        localidad: localidad,
+        barrio: barrio,
+        estado: estado
+    };
+
+    console.log("ID Cliente a enviar:", id_Cliente);
+
+    try {
+        const response = await fetch(`http://127.0.0.1:4000/Cliente/${id_Cliente}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(clienteActualizado),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            mostrarClientes();  // Actualiza la tabla después de la actualización
+        } else {
+            alert('Error al actualizar el cliente');
+        }
+    } catch (error) {
+        console.error('Error al actualizar el cliente:', error);
+    }
+}); */
+
+// Función para manejar el clic en el botón de dar de baja
+function agregarClienteBaja(cliente) {
+    // Verifica si 'cliente' es un objeto
+    if (cliente && typeof cliente === 'object') {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${cliente.id_Cliente}</td>
+            <td>${cliente.nombre}</td>
+            <td>${cliente.apellido}</td>
+            <td>${cliente.telefono}</td>
+            <td>${cliente.direccion}</td>
+            <td>${cliente.numeroDocumento}</td>
+            <td>${cliente.nombreLocalidad}</td>
+            <td>${cliente.nombreBarrio}</td>
+            <td>${cliente.estado}</td>
+            <td>
+                <button type="button" class="btn btn-success btnRestaurar" data-id="${cliente.id_Cliente}">
+                    <i class="fa-solid fa-user-check"></i>
+                </button>
+            </td>
+        `;
+        // Agregar a la tabla
+        const tablaClientesBajaBody = document.querySelector('#tablaClientesBaja tbody');
+        tablaClientesBajaBody.appendChild(row);
+    } else {
+        console.error("Error: Cliente no válido", cliente);
+    }
+}
+
+async function darDeBajaCliente(idCliente) {
+    try {
+        const response = await fetch('http://localhost:4000/darDeBaja', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ idCliente: idCliente }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al dar de baja el cliente');
+        }
+
+        const data = await response.json(); // Intenta parsear la respuesta JSON
+
+        if (data.message === 'Cliente dado de baja exitosamente') {
+            alert(data.message); // Muestra el mensaje de éxito
+
+            // Eliminar la fila de la tabla de clientes en alta
+            const row = document.querySelector(`button[data-id="${idCliente}"]`).closest('tr');
+            row.remove();
+
+            // Obtener los datos del cliente dado de baja y agregarlo a la tabla de "clientes dados de baja"
+            const cliente = await obtenerClientePorId(idCliente);
+            agregarClienteBaja(cliente);
+
+            // Después de agregar el cliente, actualizamos la lista de clientes dados de baja
+            obtenerClientesDeBaja();  // Actualiza la tabla con los datos más recientes
+        } else {
+            throw new Error('No se pudo dar de baja al cliente');
+        }
+    } catch (error) {
+        console.error('Error al dar de baja al cliente:', error);
+        alert('Hubo un error al dar de baja al cliente.');
+    }
+}
+
+async function obtenerClientePorId(idCliente) {
+    try {
+        const response = await fetch(`http://localhost:4000/Cliente/${idCliente}`);
+        const cliente = await response.json();
+        return cliente;
+    } catch (error) {
+        console.error('Error al obtener los datos del cliente:', error);
+        return null;
+    }
+}
+
+async function obtenerClientesDeBaja() {
+    try {
+        const response = await fetch('http://localhost:4000/clientesBaja');  // Endpoint correcto
+        const clientesBaja = await response.json();
+
+        // Llamar a la función para mostrar los clientes dados de baja
+        mostrarClientesBaja(clientesBaja);
+    } catch (error) {
+        console.error('Error al obtener los clientes dados de baja:', error);
+    }
+}
+
+// Mostrar los clientes dados de baja en la tabla de clientes dados de baja
+function mostrarClientesBaja(clientes) {
+    const tablaClientesBajaBody = document.querySelector('#tablaClientesBaja tbody');
+    tablaClientesBajaBody.innerHTML = '';  // Limpiar la tabla
+
+    // Verifica si 'clientes' es un array
+    if (Array.isArray(clientes)) {
+        clientes.forEach(cliente => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${cliente.id_Cliente}</td>
+                <td>${cliente.nombre}</td>
+                <td>${cliente.apellido}</td>
+                <td>${cliente.telefono}</td>
+                <td>${cliente.direccion}</td>
+                <td>${cliente.numeroDocumento}</td>
+                <td>${cliente.nombreLocalidad}</td>
+                <td>${cliente.nombreBarrio}</td>
+                <td>${cliente.estado}</td>
+                <td>
+                    <button type="button" class="btn btn-success btnRestaurar" data-id="${cliente.id_Cliente}">
+                        <i class="fa-solid fa-user-check"></i>
+                    </button>
+                </td>
+            `;
+            tablaClientesBajaBody.appendChild(row);
+        });
+    } else {
+        console.error("Los datos de clientes no son un array:", clientes);
+    }
+}
+
+
+// Llamar esta función cuando sea necesario, por ejemplo después de dar de baja un cliente
+obtenerClientesDeBaja();
+
+document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('btnDarBaja')) {
+        const idCliente = event.target.getAttribute('data-id');
+        darDeBajaCliente(idCliente);
+    }
+});
+
+// Listener para el botón de restaurar cliente
+document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('btnRestaurar')) {
+        const idCliente = event.target.getAttribute('data-id');
+        restaurarCliente(idCliente);
+    }
+});
+
+// Función para restaurar el cliente
+async function restaurarCliente(idCliente) {
+    try {
+        const response = await fetch('http://localhost:4000/restaurarCliente', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ idCliente: idCliente }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al restaurar el cliente');
+        }
+
+        const data = await response.json();
+        if (data.message === 'Cliente restaurado exitosamente') {
+            alert(data.message); // Muestra el mensaje de éxito
+
+            // Eliminar la fila de la tabla de clientes dados de baja
+            const row = document.querySelector(`button[data-id="${idCliente}"]`).closest('tr');
+            row.remove();
+
+            // Obtener los datos del cliente restaurado y agregarlo a la tabla de "clientes en alta"
+            const cliente = await obtenerClientePorId(idCliente);
+            agregarClienteAlta(cliente);
+
+            // Actualiza la tabla de clientes activos
+            obtenerClientesActivos();  // Esto actualizará la lista de clientes activos
+        } else {
+            throw new Error('No se pudo restaurar al cliente');
+        }
+    } catch (error) {
+        console.error('Error al restaurar al cliente:', error);
+        alert('Hubo un error al restaurar al cliente.');
+    }
+}
+
+// Función para agregar el cliente restaurado a la tabla de "clientes en alta"
+function agregarClienteAlta(cliente) {
+    // Verifica si el estado del cliente es activo
+    if (cliente.estado === 'activo') {
+        const tablaClientesAltaBody = document.querySelector('#tablaClientes tbody');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${cliente.id_Cliente}</td>
+            <td>${cliente.nombre}</td>
+            <td>${cliente.apellido}</td>
+            <td>${cliente.telefono}</td>
+            <td>${cliente.direccion}</td>
+            <td>${cliente.numeroDocumento}</td>
+            <td>${cliente.nombreLocalidad}</td>
+            <td>${cliente.nombreBarrio}</td>
+            <td>${cliente.estado}</td>
+            <td>
+                <button type="button" class="btn btn-success btnActualizar" data-bs-toggle="modal" data-bs-target="#actualizarCliente" data-id="${cliente.id_Cliente}">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <button type="button" class="btn btn-danger btnDarBaja" data-id="${cliente.id_Cliente}">
+                    <i class="fa-solid fa-user-slash"></i>
+                </button>
+            </td>
+        `;
+        tablaClientesAltaBody.appendChild(row);
+    }
+}
+
+function limpiarTablaClientesActivos() {
+    const tablaClientesAltaBody = document.querySelector('#tablaClientes tbody');
+    tablaClientesAltaBody.innerHTML = '';  // Limpia la tabla de clientes activos
+}
+
+async function obtenerClientesActivos() {
+    limpiarTablaClientesActivos();  // Limpia la tabla antes de agregar los nuevos clientes
+
+    try {
+        const response = await fetch('http://localhost:4000/clientesActivos');  // Endpoint para obtener clientes activos
+        const clientesActivos = await response.json();
+
+        // Llamar a la función para mostrar los clientes activos
+        clientesActivos.forEach(cliente => {
+            agregarClienteAlta(cliente);
+        });
+    } catch (error) {
+        console.error('Error al obtener los clientes activos:', error);
+    }
+}
+
+obtenerClientesActivos();
+
+function validateInput(input) {
+    if (input.tagName.toLowerCase() === 'select') {
+        if (input.value === "" || input.selectedIndex === 0) {
+            input.classList.remove('is-valid');
+            input.classList.add('is-invalid');
+        } else {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+        }
+    } else if (input.type === 'number' && input.id === 'numeroDocumento') {
+        if (input.value === "" || input.checkValidity()) {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+        } else {
+            input.classList.remove('is-valid');
+            input.classList.add('is-invalid');
+        }
+    } else {
+        if (input.checkValidity()) {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+        } else {
+            input.classList.remove('is-valid');
+            input.classList.add('is-invalid');
+        }
+    }
+}
+
+// Validación en tiempo real
+document.querySelectorAll('input, select').forEach(function (input) {
+    input.addEventListener('input', function () {
+        validateInput(input);
+    });
+    input.addEventListener('change', function () {
+        validateInput(input);
+    });
+});
+

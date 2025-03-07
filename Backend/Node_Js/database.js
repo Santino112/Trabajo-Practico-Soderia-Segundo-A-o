@@ -1,17 +1,25 @@
-const mysql = require("mysql2/promise");
-const dotenv = require("dotenv");
+// database.js
+import mysql from "mysql2/promise"; // Usa 'import' en vez de 'require'
+import dotenv from "dotenv"; // Usa 'import' en vez de 'require'
+
 dotenv.config();
 
-const getConnection = async () => {
-    const connection = await mysql.createConnection({
-        host: process.env.HOST,
-        database: process.env.DATABASE,
-        user: process.env.USER,
-        password: process.env.PASSWORD
-    });
-    return connection;
-};
+const connection = mysql.createConnection({
+    host: process.env.HOST,
+    database: process.env.DATABASE,
+    user: process.env.USER,
+    password: process.env.PASSWORD
+});
 
-module.exports = {
+connection.then((conn) => {
+    console.log('Conectado a la base de datos!');
+}).catch((error) => {
+    console.log('El error de conexion es: ' + error);
+});
+
+const getConnection = async () => await connection;
+
+// Exporta 'getConnection' usando 'export default'
+export default {
     getConnection
 };
